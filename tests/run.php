@@ -200,12 +200,40 @@ $g = array_values(array_filter($groups, fn($x) => $x['id'] === 'pre-competitie-2
 $tr = $g['trainingen'];
 $tr[] = ['dag' => 'wo', 'van' => '18:00', 'tot' => '19:15', 'soort' => 'Zwemmen', 'plaats' => 'Zwembad'];
 $r = http('POST', '/beheer/groepen/bewerk/?id=pre-competitie-2', ['_csrf' => $t, 'orig_id' => 'pre-competitie-2', 'naam' => $g['naam'], 'afdeling' => 'zwemschool',
-    'order' => '30', 'trainers' => 'Ine', 'omschrijving' => '', 'zichtbaar' => '1', 'trainingen' => $tr]);
+    'order' => '30', 'trainers' => ['ine-bijnens'], 'omschrijving' => '', 'zichtbaar' => '1', 'trainingen' => $tr]);
 ok($r['status'] === 303, 'uren van een groep opslaan');
 ok(str_contains(get('/zwemschool/lesuren/')['body'], '18:00–19:15'), 'nieuw uur staat op de lesuren-pagina');
 $tr[] = ['dag' => 'ma', 'van' => '19:00', 'tot' => '18:00', 'soort' => '', 'plaats' => ''];
 $r = http('POST', '/beheer/groepen/bewerk/?id=pre-competitie-2', ['_csrf' => $t, 'orig_id' => 'pre-competitie-2', 'naam' => $g['naam'], 'afdeling' => 'zwemschool', 'order' => '30', 'zichtbaar' => '1', 'trainingen' => $tr]);
 ok(str_contains($r['body'], 'einde na begin'), 'einduur voor beginuur wordt geweigerd');
+
+echo "\nTrainers\n";
+$tp = get('/competitie/trainers/')['body'];
+ok(str_contains($tp, 'Lander Mulkers') && str_contains($tp, 'tel:+32470571306') && str_contains($tp, 'mailto:lander.mulkers@khzs.be'), 'trainerspagina toont trainers met contactgegevens');
+ok(str_contains($tp, 'Competitie 1 nationaal en Kern'), 'groepen met dezelfde trainers worden samengevoegd');
+ok(str_contains(get('/competitie/trainingsuren/')['body'], 'Trainers: Antoinette Konings en Lander Mulkers'), 'trainersnamen bij de trainingsuren');
+$r = http('POST', '/beheer/trainers/bewerk/', ['_csrf' => $t, 'id' => '', 'naam' => 'Sofie Peeters', 'telefoon' => '0499 11 22 33', 'email' => 'sofie@example.be', 'toon_contact' => '1', 'groepen' => ['zwemschool', 'kern']]);
+ok($r['status'] === 303, 'trainer toevoegen');
+ok(str_contains(get('/zwemschool/lesuren/')['body'], 'Trainer: Sofie Peeters'), 'nieuwe trainer staat bij de gekozen groep');
+ok(str_contains(get('/competitie/trainers/')['body'], 'tel:+32499112233'), 'nieuwe trainer op de trainerspagina met belbare link');
+$r = http('POST', '/beheer/trainers/bewerk/', ['_csrf' => $t, 'id' => '', 'naam' => 'Sofie Peeters']);
+ok(str_contains($r['body'], 'bestaat al'), 'dubbele trainersnaam wordt geweigerd');
+$r = http('POST', '/beheer/trainers/bewerk/', ['_csrf' => $t, 'id' => '', 'naam' => 'X', 'email' => 'geen-adres']);
+ok(str_contains($r['body'], 'niet geldig'), 'ongeldig e-mailadres wordt geweigerd');
+http('POST', '/beheer/trainers/bewerk/?id=sofie-peeters', ['_csrf' => $t, 'id' => 'sofie-peeters', 'naam' => 'Sofie Peeters', 'telefoon' => '0499 11 22 33', 'email' => 'sofie@example.be', 'groepen' => ['zwemschool']]);
+$tp = get('/competitie/trainers/')['body'];
+ok(str_contains($tp, 'Sofie Peeters') && !str_contains($tp, 'sofie@example.be'), 'contactgegevens verbergen werkt');
+ok(!str_contains(get('/competitie/trainingsuren/')['body'], 'Sofie'), 'loskoppelen van een groep werkt');
+$gr = get('/beheer/groepen/bewerk/?id=kern')['body'];
+ok(str_contains($gr, 'name="trainers[]" value="lander-mulkers" checked'), 'groepsformulier toont trainers als keuzelijst');
+$pages = json_decode(file_get_contents("$tmp/data/pages.json"), true)['pages'];
+$contact = array_values(array_filter($pages, fn($p) => $p['path'] === '/club/contact/'))[0];
+http('POST', '/beheer/paginas/bewerk/?id=' . $contact['id'], ['_csrf' => $t, 'id' => $contact['id'], 'title' => $contact['title'], 'menu_title' => '', 'parent' => '/club/', 'slug' => 'contact',
+    'sub' => '', 'type' => 'page', 'target' => '', 'visible' => '1', 'in_menu' => '1', 'side' => '1', 'order' => '10', 'body' => $contact['body'] . '<h2>Trainers zwemschool</h2><p>[[trainers:zwemschool]]</p>']);
+$cp = get('/club/contact/')['body'];
+ok(str_contains($cp, 'Ine Bijnens') && !str_contains($cp, 'Lander Mulkers') && !str_contains($cp, '[[trainers'), '[[trainers:zwemschool]] werkt op een gewone pagina');
+http('POST', '/beheer/trainers/verwijder/', ['_csrf' => $t, 'id' => 'sofie-peeters']);
+ok(!str_contains(get('/zwemschool/lesuren/')['body'], 'Sofie') && !str_contains(file_get_contents("$tmp/data/groups.json"), 'sofie-peeters'), 'trainer verwijderen haalt hem ook uit de groepen');
 
 echo "\nInstellingen en beheerders\n";
 $s = json_decode(file_get_contents("$tmp/data/settings.json"), true);
@@ -229,6 +257,32 @@ http('POST', '/beheer/logout/', ['_csrf' => $t]);
 $lt = csrf(get('/beheer/login/')['body']);
 for ($i = 0; $i < 9; $i++) $r = http('POST', '/beheer/login/', ['_csrf' => $lt, 'email' => 'tweede@example.be', 'password' => 'fout']);
 ok(str_contains($r['body'], 'Te veel'), 'na te veel foute pogingen wordt aanmelden geblokkeerd');
+
+echo "\nBijwerken van bestaande gegevens (oude versie)\n";
+$old = sys_get_temp_dir() . '/hzs-oud-' . bin2hex(random_bytes(4));
+copy_tree($tmp, $old, ['data', 'uploads', 'server.log']);
+mkdir("$old/data/backup", 0775, true);
+$og = json_decode(file_get_contents("$repo/seed/groups.json"), true);
+foreach ($og['groups'] as &$x) $x['trainers'] = ['kern' => 'Lander en Antoinette', 'competitie-3' => 'Jorien', 'nieuwe-groep' => 'Mirte'][$x['id']] ?? '';
+unset($x);
+$og['groups'][] = ['id' => 'nieuwe-groep', 'naam' => 'Nieuwe groep', 'afdeling' => 'competitie', 'trainers' => 'Mirte', 'zichtbaar' => true, 'order' => 99, 'trainingen' => []];
+file_put_contents("$old/data/groups.json", json_encode($og));
+$op = json_decode(file_get_contents("$repo/seed/pages.json"), true);
+foreach ($op['pages'] as &$x) if ($x['path'] === '/competitie/trainers/') { $x['type'] = 'page'; $x['body'] = '<ul class="contacts"><li>oud</li></ul>'; }
+unset($x);
+file_put_contents("$old/data/pages.json", json_encode($op));
+$sock = stream_socket_server('tcp://127.0.0.1:0'); $p2 = (int)substr(strrchr(stream_socket_get_name($sock, false), ':'), 1); fclose($sock);
+$proc2 = proc_open([PHP_BINARY, '-S', "127.0.0.1:$p2", "$old/router.php"], [1 => ['file', "$old/s.log", 'a'], 2 => ['file', "$old/s.log", 'a']], $pp, $old);
+for ($i = 0; $i < 50 && !@fsockopen('127.0.0.1', $p2); $i++) usleep(100000);
+$mb = (string)@file_get_contents("http://127.0.0.1:$p2/competitie/trainers/");
+$mg = json_decode((string)@file_get_contents("$old/data/groups.json"), true)['groups'] ?? [];
+$byId = array_column($mg, 'trainers', 'id');
+ok(is_array($byId['kern'] ?? null) && in_array('lander-mulkers', $byId['kern'], true), 'oude trainersnamen worden omgezet naar gekoppelde trainers');
+ok(($byId['nieuwe-groep'] ?? null) === ['mirte-bielen'], 'eigen groepen: namen worden herkend op voornaam');
+ok(str_contains($mb, 'tel:+32470571306') && !str_contains($mb, '<li>oud</li>'), 'oude trainerspagina wordt het nieuwe dynamische blok');
+ok(is_file("$old/data/trainers.json") && json_decode(file_get_contents("$old/data/meta.json"), true)['schema'] === 2, 'trainers aangemaakt en versie bijgehouden');
+proc_terminate($proc2); proc_close($proc2);
+rm_tree($old);
 
 $errors = array_filter(explode("\n", (string)@file_get_contents($log)), fn($l) => preg_match('/PHP (Fatal|Warning|Notice|Deprecated|Parse)/i', $l));
 ok(!$errors, 'geen PHP-fouten of waarschuwingen in de serverlog' . ($errors ? ":\n    " . implode("\n    ", array_slice($errors, 0, 5)) : ''));

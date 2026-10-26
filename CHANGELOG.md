@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.3.0] – 2026-10-26 – `dev`
+
+### Toegevoegd
+- Trainers als aparte gegevens in het beheer (**Trainers**): naam, telefoon, e-mail, keuze om contactgegevens
+  op de website te tonen, en koppeling aan groepen. Toevoegen, bewerken en verwijderen (verwijderen koppelt ook los).
+- In het groepsformulier kies je trainers uit een lijst in plaats van namen te typen.
+- Pagina **Trainers & contact** wordt automatisch opgebouwd: per groep de trainers met belbare nummers en
+  e-mailadressen; groepen met dezelfde trainers worden samengevoegd.
+- Inhoudsblok `[[trainers]]`, `[[trainers:zwemschool]]` en `[[trainers:competitie]]`, bruikbaar op elke pagina
+  (bv. de contactpagina).
+- Automatisch bijwerken van bestaande gegevens bij een nieuwe versie (`data/meta.json`): oude trainersnamen
+  worden gekoppelde trainers, de oude getypte trainerspagina wordt het nieuwe blok.
+
+### Gewijzigd
+- Trainersnamen bij de les- en trainingsuren komen uit de gekoppelde trainers.
+
 ## [0.2.1] – 2026-10-26 – `dev`, `main`
 
 ### Gewijzigd

@@ -1,0 +1,60 @@
+{
+ "trainers": [
+  {
+   "id": "lander-mulkers",
+   "naam": "Lander Mulkers",
+   "telefoon": "0470 57 13 06",
+   "email": "lander.mulkers@khzs.be",
+   "toon_contact": true
+  },
+  {
+   "id": "antoinette-konings",
+   "naam": "Antoinette Konings",
+   "telefoon": "+31 6 10 37 25 14",
+   "email": "antoinette.konings@khzs.be",
+   "toon_contact": true
+  },
+  {
+   "id": "mirte-bielen",
+   "naam": "Mirte Bielen",
+   "telefoon": "0499 08 01 07",
+   "email": "mirte.bielen@khzs.be",
+   "toon_contact": true
+  },
+  {
+   "id": "jolien-vanhentenrijk",
+   "naam": "Jolien Vanhentenrijk",
+   "telefoon": "0474 60 22 52",
+   "email": "jolien.vanhentenrijk@khzs.be",
+   "toon_contact": true
+  },
+  {
+   "id": "jorien-bielen",
+   "naam": "Jorien Bielen",
+   "telefoon": "0471 76 02 59",
+   "email": "jorien.bielen@khzs.be",
+   "toon_contact": true
+  },
+  {
+   "id": "ine-bijnens",
+   "naam": "Ine Bijnens",
+   "telefoon": "0471 89 15 62",
+   "email": "ine@bijnens.com",
+   "toon_contact": true
+  },
+  {
+   "id": "dimitry",
+   "naam": "Dimitry",
+   "telefoon": "",
+   "email": "",
+   "toon_contact": true
+  },
+  {
+   "id": "jelle",
+   "naam": "Jelle",
+   "telefoon": "",
+   "email": "",
+   "toon_contact": true
+  }
+ ]
+}

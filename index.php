@@ -9,6 +9,7 @@ header('Referrer-Policy: strict-origin-when-cross-origin');
 header('X-Frame-Options: SAMEORIGIN');
 
 try {
+    run_migrations();
     $route = current_route();
 
     if ($route === '/beheer/' || str_starts_with($route, '/beheer/')) {

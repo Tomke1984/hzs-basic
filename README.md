@@ -5,7 +5,7 @@ De inhoud komt van de vorige site (khzs.be), de vormgeving volgt de HZS-clubapp.
 
 - **PHP 8.1+**, geen database: alle inhoud staat in JSON-bestanden in `data/`.
 - **Beheer** (`/beheer`): pagina's, nieuws, kalender (activiteiten, vakanties, sluitingsdagen),
-  groepen en les-/trainingsuren, instellingen van de startpagina en voettekst, beheerders en bestanden.
+  groepen en les-/trainingsuren, trainers (gekoppeld aan groepen), instellingen van de startpagina en voettekst, beheerders en bestanden.
 - **Agenda-abonnementen** per groep op `/kalender/ics/<groep>.ics`, live uit de gegevens.
 
 ## Branches
@@ -26,6 +26,20 @@ Open http://localhost:8000 voor de site en http://localhost:8000/beheer om de ee
 met de `setup_code` uit `config.php`.
 
 De eerste keer wordt `data/` gevuld met de startinhoud uit `seed/`. Daarna wordt `seed/` niet meer gebruikt.
+
+## Inhoudsblokken
+
+Te gebruiken in de tekst van elke pagina (op een eigen regel):
+
+| Blok | Toont |
+|---|---|
+| `[[trainers]]` | alle trainers per groep, met contactgegevens |
+| `[[trainers:zwemschool]]` / `[[trainers:competitie]]` | enkel die afdeling |
+
+## Nieuwe versie met andere gegevensstructuur
+
+`run_migrations()` (in `app/site.php`) zet bestaande gegevens in `data/` automatisch om bij het eerste bezoek na
+een update; de versie staat in `data/meta.json`. Elke stap maakt eerst een back-up.
 
 ## Testen
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
    Beheer van de HZS-website (/beheer)
    ===================================================================== */
 
-const SYSTEM_TYPES = ['home' => 'Startpagina', 'kalender' => 'Kalender', 'lesuren' => 'Lesuren (uit groepen)', 'trainingsuren' => 'Trainingsuren (uit groepen)'];
+const SYSTEM_TYPES = ['home' => 'Startpagina', 'kalender' => 'Kalender', 'lesuren' => 'Lesuren (uit groepen)', 'trainingsuren' => 'Trainingsuren (uit groepen)', 'trainers' => 'Trainers (uit trainers)'];
 const RESERVED_PATHS = ['/beheer/', '/assets/', '/uploads/', '/app/', '/data/'];
 
 /* ---------- Sessie, login, CSRF ---------- */
@@ -97,6 +97,7 @@ function admin_dispatch(string $route): void {
         'nieuws' => 'admin_news', 'nieuws/bewerk' => 'admin_news_edit', 'nieuws/verwijder' => 'admin_news_delete',
         'kalender' => 'admin_calendar', 'kalender/activiteit' => 'admin_event_edit', 'kalender/verwijder' => 'admin_calendar_delete',
         'groepen' => 'admin_groups', 'groepen/bewerk' => 'admin_group_edit', 'groepen/verwijder' => 'admin_group_delete',
+        'trainers' => 'admin_trainers', 'trainers/bewerk' => 'admin_trainer_edit', 'trainers/verwijder' => 'admin_trainer_delete',
         'instellingen' => 'admin_settings',
         'gebruikers' => 'admin_users', 'gebruikers/verwijder' => 'admin_user_delete', 'wachtwoord' => 'admin_password',
         'media' => 'admin_media', 'media/verwijder' => 'admin_media_delete', 'upload' => 'admin_upload',
@@ -111,7 +112,7 @@ function admin_dispatch(string $route): void {
 function admin_page(string $title, string $content, string $active = ''): void {
     $u = current_user();
     $nav = '';
-    $items = ['' => 'Overzicht', 'paginas' => "Pagina's", 'nieuws' => 'Nieuws', 'kalender' => 'Kalender', 'groepen' => 'Groepen & uren',
+    $items = ['' => 'Overzicht', 'paginas' => "Pagina's", 'nieuws' => 'Nieuws', 'kalender' => 'Kalender', 'groepen' => 'Groepen & uren', 'trainers' => 'Trainers',
         'media' => 'Bestanden', 'instellingen' => 'Instellingen', 'gebruikers' => 'Beheerders'];
     if ($u) foreach ($items as $k => $label) {
         $cur = $k === $active ? ' aria-current="page"' : '';
@@ -348,8 +349,9 @@ function admin_page_edit(): void {
     $hint = match ($page['type']) {
         'kalender' => 'De activiteiten, vakanties en agenda-links komen op de plek van <code>[[blok]]</code>. Haal je die weg, dan komen ze onderaan.',
         'lesuren', 'trainingsuren' => 'De uren komen uit <a href="' . e(url('/beheer/groepen/')) . '">Groepen &amp; uren</a> en verschijnen op de plek van <code>[[blok]]</code>.',
+        'trainers' => 'De trainers per groep, met hun contactgegevens, komen uit <a href="' . e(url('/beheer/trainers/')) . '">Trainers</a> en verschijnen op de plek van <code>[[blok]]</code>.',
         'home' => 'Dit is het onderste deel van de startpagina. De bovenkant (titel, tekst en knoppen) pas je aan bij <a href="' . e(url('/beheer/instellingen/')) . '">Instellingen</a>; nieuws en activiteiten komen er vanzelf op.',
-        default => '',
+        default => 'Tip: typ <code>[[trainers]]</code> op een eigen regel om de trainers per groep te tonen (of <code>[[trainers:zwemschool]]</code> / <code>[[trainers:competitie]]</code>).',
     };
 
     $f = ($errors ? '<div class="alert alert-error"><ul>' . implode('', array_map(fn($x) => '<li>' . e($x) . '</li>', array_unique($errors))) . '</ul></div>' : '')
@@ -635,7 +637,7 @@ function admin_groups(): void {
     foreach (groups() as $g) {
         $n = count($g['trainingen'] ?? []);
         $rows .= '<tr><td><a href="' . e(url('/beheer/groepen/bewerk/?id=' . $g['id'])) . '"><b>' . e($g['naam']) . '</b></a>' . (empty($g['zichtbaar']) ? ' <span class="tag off">verborgen</span>' : '')
-            . '</td><td>' . e(AFDELINGEN[$g['afdeling']] ?? $g['afdeling']) . '</td><td class="muted">' . e($g['trainers'] ?? '') . '</td><td class="num">' . $n . ' per week</td></tr>';
+            . '</td><td>' . e(AFDELINGEN[$g['afdeling']] ?? $g['afdeling']) . '</td><td class="muted">' . e(nl_list(array_map(fn($t) => $t['naam'], group_trainers($g))) ?: '—') . '</td><td class="num">' . $n . ' per week</td></tr>';
     }
     $c = '<p class="toolbar"><a class="btn" href="' . e(url('/beheer/groepen/bewerk/')) . '">Groep toevoegen</a></p>'
         . '<p class="muted small">Groepen van de zwemschool verschijnen op <a href="' . e(url('/zwemschool/lesuren/')) . '" target="_blank" rel="noopener">Lesuren</a>, die van de competitie op <a href="' . e(url('/competitie/trainingsuren/')) . '" target="_blank" rel="noopener">Trainingsuren</a>. Elke groep krijgt ook een eigen agenda-bestand.</p>'
@@ -654,14 +656,15 @@ function admin_group_edit(): void {
     $data = load('groups', ['groups' => []]);
     $id = (string)($_GET['id'] ?? post('orig_id'));
     $g = null;
-    foreach ($data['groups'] as $x) if ($x['id'] === $id) $g = $x;
+    foreach (groups() as $x) if ($x['id'] === $id) $g = $x;
     $isNew = !$g;
-    $g = $g ?? ['id' => '', 'naam' => '', 'afdeling' => 'zwemschool', 'trainers' => '', 'omschrijving' => '', 'zichtbaar' => true, 'order' => 50, 'trainingen' => []];
+    $g = $g ?? ['id' => '', 'naam' => '', 'afdeling' => 'zwemschool', 'trainers' => [], 'omschrijving' => '', 'zichtbaar' => true, 'order' => 50, 'trainingen' => []];
     $errors = [];
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $g['naam'] = post('naam');
         $g['afdeling'] = array_key_exists(post('afdeling'), AFDELINGEN) ? post('afdeling') : 'zwemschool';
-        $g['trainers'] = post('trainers');
+        $known = array_column(trainers(), 'id');
+        $g['trainers'] = array_values(array_intersect(array_filter((array)($_POST['trainers'] ?? []), 'is_string'), $known));
         $g['omschrijving'] = post('omschrijving');
         $g['zichtbaar'] = (bool)post('zichtbaar', '');
         $g['order'] = (int)post('order', 50);
@@ -698,8 +701,8 @@ function admin_group_edit(): void {
         . '<input type="hidden" name="orig_id" value="' . e($g['id']) . '">'
         . '<div class="grid3">' . field('Naam', input('naam', $g['naam'], 'text', 'required maxlength="60"')) . field('Afdeling', select('afdeling', AFDELINGEN, $g['afdeling']))
         . field('Volgorde', input('order', (string)$g['order'], 'number', 'min="0" max="999"')) . '</div>'
-        . '<div class="grid2">' . field('Trainer(s)', input('trainers', $g['trainers'] ?? '', 'text', 'maxlength="120" placeholder="Lander en Antoinette"'))
-        . field('Korte omschrijving', input('omschrijving', $g['omschrijving'] ?? '', 'text', 'maxlength="120" placeholder="Zwemles · Zwembad – groot bad"')) . '</div>'
+        . field('Korte omschrijving', input('omschrijving', $g['omschrijving'] ?? '', 'text', 'maxlength="120" placeholder="Zwemles · Zwembad – groot bad"'))
+        . '<div class="field"><span>Trainers</span>' . trainer_checks($g['trainers'] ?? []) . '</div>'
         . '<div class="checks">' . checkbox('zichtbaar', !empty($g['zichtbaar']), 'Tonen op de website en als agenda-bestand') . '</div>'
         . '<h2>Uren per week</h2><div class="table-wrap"><table class="list trainings"><thead><tr><th>Dag</th><th>Van</th><th>Tot</th><th>Soort</th><th>Plaats</th><th></th></tr></thead><tbody data-rows>' . $trs . '</tbody></table></div>'
         . '<template data-row-template>' . $tpl . '</template><datalist id="soorten"><option value="Zwemles"><option value="Zwemmen"><option value="Droogtraining"></datalist>'
@@ -922,4 +925,108 @@ function admin_backups(): void {
     foreach (array_slice($files, 0, 60) as $f) $rows .= '<tr><td><code>' . e(basename($f)) . '</code></td><td class="num">' . date('d/m/Y H:i', filemtime($f)) . '</td></tr>';
     admin_page('Back-ups', '<p class="muted">Bij elke wijziging bewaart de site automatisch een kopie in <code>data/backup</code> (de laatste 40 per onderdeel). Terugzetten: kopieer het gewenste bestand via FTP over het bestand in <code>data/</code> en hernoem het (bv. <code>pages.json</code>).</p>'
         . ($rows ? '<div class="table-wrap"><table class="list"><thead><tr><th>Bestand</th><th>Datum</th></tr></thead><tbody>' . $rows . '</tbody></table></div>' : '<p class="empty">Nog geen back-ups.</p>'), '');
+}
+
+
+/* ---------- Trainers ---------- */
+
+function trainer_checks(array $selected): string {
+    $ts = trainers();
+    $add = '<a href="' . e(url('/beheer/trainers/bewerk/')) . '">Trainer toevoegen</a>';
+    if (!$ts) return '<p class="muted small">Er zijn nog geen trainers. ' . $add . '</p>';
+    $o = '<div class="checkgrid">';
+    foreach ($ts as $t) $o .= checkbox('trainers[]', in_array($t['id'], $selected, true), $t['naam'], $t['id']);
+    return $o . '</div><small>Op de website staan de namen alfabetisch. ' . $add . '</small>';
+}
+
+function trainer_groups(string $id): array {
+    return array_values(array_filter(groups(), fn($g) => in_array($id, $g['trainers'] ?? [], true)));
+}
+
+function admin_trainers(): void {
+    $rows = '';
+    foreach (trainers() as $t) {
+        $gn = nl_list(array_map(fn($g) => $g['naam'], trainer_groups($t['id'])));
+        $rows .= '<tr><td><a href="' . e(url('/beheer/trainers/bewerk/?id=' . $t['id'])) . '"><b>' . e($t['naam']) . '</b></a>' . (empty($t['toon_contact']) ? ' <span class="tag">contact verborgen</span>' : '')
+            . '</td><td class="num">' . e($t['telefoon'] ?: '—') . '</td><td>' . e($t['email'] ?: '—') . '</td><td class="muted">' . e($gn ?: 'geen groep') . '</td></tr>';
+    }
+    $page = page_by_path('/competitie/trainers/');
+    $c = '<p class="toolbar"><a class="btn" href="' . e(url('/beheer/trainers/bewerk/')) . '">Trainer toevoegen</a></p>'
+        . '<p class="muted small">Trainers koppel je aan groepen (hier of bij <a href="' . e(url('/beheer/groepen/')) . '">Groepen &amp; uren</a>). Hun namen verschijnen bij de uren, en met contactgegevens op '
+        . ($page ? '<a href="' . e(url($page['path'])) . '" target="_blank" rel="noopener">' . e($page['title']) . '</a>' : 'de trainerspagina') . ' en overal waar <code>[[trainers]]</code> in een pagina staat.</p>'
+        . ($rows ? '<div class="table-wrap"><table class="list"><thead><tr><th>Naam</th><th>Telefoon</th><th>E-mail</th><th>Groepen</th></tr></thead><tbody>' . $rows . '</tbody></table></div>' : '<p class="empty">Nog geen trainers.</p>');
+    admin_page('Trainers', $c, 'trainers');
+}
+
+function admin_trainer_edit(): void {
+    $data = load('trainers', ['trainers' => []]);
+    $id = (string)($_GET['id'] ?? post('id'));
+    $t = null;
+    foreach ($data['trainers'] as $x) if ($x['id'] === $id) $t = $x;
+    if ($id !== '' && !$t) { flash('Trainer niet gevonden.', 'error'); redirect('/beheer/trainers/'); }
+    $isNew = !$t;
+    $t = $t ?? ['id' => '', 'naam' => '', 'telefoon' => '', 'email' => '', 'toon_contact' => true];
+    $sel = $isNew ? [] : array_column(trainer_groups($t['id']), 'id');
+    $errors = [];
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $t['naam'] = mb_substr(post('naam'), 0, 80);
+        $t['telefoon'] = mb_substr(post('telefoon'), 0, 30);
+        $t['email'] = strtolower(post('email'));
+        $t['toon_contact'] = (bool)post('toon_contact', '');
+        $sel = array_values(array_filter((array)($_POST['groepen'] ?? []), 'is_string'));
+        if ($t['naam'] === '') $errors[] = 'Vul de naam van de trainer in.';
+        if ($t['email'] !== '' && !filter_var($t['email'], FILTER_VALIDATE_EMAIL)) $errors[] = 'Het e-mailadres is niet geldig.';
+        if ($t['telefoon'] !== '' && !preg_match('/^[0-9 +().\/-]{6,30}$/', $t['telefoon'])) $errors[] = 'Het telefoonnummer mag enkel cijfers, spaties en + . / - ( ) bevatten.';
+        foreach ($data['trainers'] as $x) if ($x['id'] !== $t['id'] && mb_strtolower($x['naam']) === mb_strtolower($t['naam'])) $errors[] = 'Er bestaat al een trainer met deze naam.';
+        if (!$errors) {
+            if ($isNew) {
+                $base = slugify($t['naam']); $slug = $base; $i = 2;
+                while (in_array($slug, array_column($data['trainers'], 'id'), true)) $slug = $base . '-' . $i++;
+                $t['id'] = $slug;
+                $data['trainers'][] = $t;
+            } else foreach ($data['trainers'] as &$x) if ($x['id'] === $t['id']) $x = $t;
+            unset($x);
+            save('trainers', $data);
+            // Koppeling met groepen bijwerken
+            $gd = load('groups', ['groups' => []]);
+            foreach ($gd['groups'] as &$g) {
+                $cur = is_array($g['trainers'] ?? null) ? $g['trainers'] : trainer_ids_from_names((string)($g['trainers'] ?? ''));
+                $has = in_array($t['id'], $cur, true);
+                $want = in_array($g['id'], $sel, true);
+                if ($want && !$has) $cur[] = $t['id'];
+                if (!$want && $has) $cur = array_values(array_diff($cur, [$t['id']]));
+                $g['trainers'] = array_values($cur);
+            }
+            unset($g);
+            save('groups', $gd);
+            flash($isNew ? 'Trainer toegevoegd.' : 'Trainer opgeslagen.');
+            redirect('/beheer/trainers/bewerk/?id=' . $t['id']);
+        }
+    }
+    $f = ($errors ? '<div class="alert alert-error"><ul>' . implode('', array_map(fn($x) => '<li>' . e($x) . '</li>', array_unique($errors))) . '</ul></div>' : '')
+        . '<input type="hidden" name="id" value="' . e($t['id']) . '">'
+        . field('Naam', input('naam', $t['naam'], 'text', 'required maxlength="80" placeholder="Voornaam Achternaam"'))
+        . '<div class="grid2">' . field('Telefoon', input('telefoon', $t['telefoon'], 'tel', 'maxlength="30" placeholder="0470 12 34 56"'))
+        . field('E-mailadres', input('email', $t['email'], 'email', 'maxlength="120"')) . '</div>'
+        . '<div class="checks">' . checkbox('toon_contact', !empty($t['toon_contact']), 'Telefoon en e-mail tonen op de website') . '</div>'
+        . '<div class="field"><span>Groepen</span>' . group_checks('groepen', $sel, 'De trainer verschijnt bij de uren en op de trainerspagina van deze groepen.') . '</div>'
+        . '<div class="form-actions"><button class="btn">Opslaan</button><a class="btn ghost" href="' . e(url('/beheer/trainers/')) . '">Terug</a></div>';
+    $c = post_form('/beheer/trainers/bewerk/' . ($t['id'] ? '?id=' . $t['id'] : ''), $f, 'form');
+    if (!$isNew) $c .= '<div class="danger-zone">' . delete_button('/beheer/trainers/verwijder/', $t['id'], 'Trainer "' . $t['naam'] . '" verwijderen? De trainer verdwijnt ook uit alle groepen.', 'Trainer verwijderen') . '</div>';
+    admin_page($isNew ? 'Trainer toevoegen' : 'Trainer: ' . $t['naam'], $c, 'trainers');
+}
+
+function admin_trainer_delete(): void {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $id = post('id');
+        $d = load('trainers', ['trainers' => []]);
+        $d['trainers'] = array_values(array_filter($d['trainers'], fn($x) => $x['id'] !== $id));
+        save('trainers', $d);
+        $gd = load('groups', ['groups' => []]);
+        foreach ($gd['groups'] as &$g) if (is_array($g['trainers'] ?? null)) $g['trainers'] = array_values(array_diff($g['trainers'], [$id]));
+        unset($g);
+        save('groups', $gd);
+        flash('Trainer verwijderd en losgekoppeld van de groepen.');
+    }
+    redirect('/beheer/trainers/');
 }

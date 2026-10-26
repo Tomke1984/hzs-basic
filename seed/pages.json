@@ -101,9 +101,9 @@
    "in_menu": true,
    "visible": true,
    "side": true,
-   "type": "page",
+   "type": "trainers",
    "target": "",
-   "body": "<h2 id=\"kern-en-competitie-1\">Kern en competitie 1</h2>\n<ul class=\"contacts\">\n<li><strong>Lander Mulkers</strong><a href=\"tel:+32470571306\">0470 57 13 06</a><br><a href=\"mailto:lander.mulkers@khzs.be\">lander.mulkers@khzs.be</a></li>\n<li><strong>Antoinette Konings</strong><a href=\"tel:+31610372514\">+31 6 10 37 25 14</a><br><a href=\"mailto:antoinette.konings@khzs.be\">antoinette.konings@khzs.be</a></li>\n</ul>\n<h2 id=\"competitie-2-en-beloften\">Competitie 2 en beloften</h2>\n<ul class=\"contacts\">\n<li><strong>Mirte Bielen</strong><a href=\"tel:+32499080107\">0499 08 01 07</a><br><a href=\"mailto:mirte.bielen@khzs.be\">mirte.bielen@khzs.be</a></li>\n</ul>\n<h2 id=\"competitie-3\">Competitie 3</h2>\n<ul class=\"contacts\">\n<li><strong>Jolien Vanhentenrijk</strong><a href=\"tel:+32474602252\">0474 60 22 52</a><br><a href=\"mailto:jolien.vanhentenrijk@khzs.be\">jolien.vanhentenrijk@khzs.be</a></li>\n<li><strong>Jorien Bielen</strong><a href=\"tel:+32471760259\">0471 76 02 59</a><br><a href=\"mailto:jorien.bielen@khzs.be\">jorien.bielen@khzs.be</a></li>\n</ul>\n<h2 id=\"pre-competitie-1\">Pré-competitie 1</h2>\n<ul class=\"contacts\">\n<li><strong>Jorien Bielen</strong><a href=\"tel:+32471760259\">0471 76 02 59</a><br><a href=\"mailto:jorien.bielen@khzs.be\">jorien.bielen@khzs.be</a></li>\n</ul>\n<h2 id=\"pre-competitie-2\">Pré-competitie 2</h2>\n<ul class=\"contacts\">\n<li><strong>Ine Bijnens</strong><a href=\"tel:+32471891562\">0471 89 15 62</a><br><a href=\"mailto:ine@bijnens.com\">ine@bijnens.com</a></li>\n</ul>"
+   "body": "<p>[[blok]]</p>"
   },
   {
    "id": "0aaa2cb09053",

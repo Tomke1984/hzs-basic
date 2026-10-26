@@ -4,7 +4,7 @@
    "id": "zwemschool",
    "naam": "Zwemschool",
    "afdeling": "zwemschool",
-   "trainers": "",
+   "trainers": [],
    "omschrijving": "",
    "zichtbaar": true,
    "order": 10,
@@ -57,7 +57,9 @@
    "id": "pre-competitie-1",
    "naam": "Pré-competitie 1",
    "afdeling": "zwemschool",
-   "trainers": "",
+   "trainers": [
+    "jorien-bielen"
+   ],
    "omschrijving": "",
    "zichtbaar": true,
    "order": 20,
@@ -89,7 +91,9 @@
    "id": "pre-competitie-2",
    "naam": "Pré-competitie 2",
    "afdeling": "zwemschool",
-   "trainers": "",
+   "trainers": [
+    "ine-bijnens"
+   ],
    "omschrijving": "",
    "zichtbaar": true,
    "order": 30,
@@ -107,7 +111,10 @@
    "id": "competitie-3",
    "naam": "Competitie 3",
    "afdeling": "competitie",
-   "trainers": "Jorien",
+   "trainers": [
+    "jorien-bielen",
+    "jolien-vanhentenrijk"
+   ],
    "omschrijving": "",
    "zichtbaar": true,
    "order": 40,
@@ -153,7 +160,11 @@
    "id": "competitie-2",
    "naam": "Competitie 2",
    "afdeling": "competitie",
-   "trainers": "Dimitry en Jelle",
+   "trainers": [
+    "dimitry",
+    "jelle",
+    "mirte-bielen"
+   ],
    "omschrijving": "",
    "zichtbaar": true,
    "order": 50,
@@ -199,7 +210,11 @@
    "id": "beloften",
    "naam": "Beloften",
    "afdeling": "competitie",
-   "trainers": "Dimitry en Jelle",
+   "trainers": [
+    "dimitry",
+    "jelle",
+    "mirte-bielen"
+   ],
    "omschrijving": "",
    "zichtbaar": true,
    "order": 60,
@@ -252,7 +267,11 @@
    "id": "competitie-1-provinciaal",
    "naam": "Competitie 1 provinciaal",
    "afdeling": "competitie",
-   "trainers": "Jelle",
+   "trainers": [
+    "jelle",
+    "lander-mulkers",
+    "antoinette-konings"
+   ],
    "omschrijving": "",
    "zichtbaar": true,
    "order": 70,
@@ -284,7 +303,10 @@
    "id": "competitie-1-nationaal",
    "naam": "Competitie 1 nationaal",
    "afdeling": "competitie",
-   "trainers": "Lander en Antoinette",
+   "trainers": [
+    "lander-mulkers",
+    "antoinette-konings"
+   ],
    "omschrijving": "",
    "zichtbaar": true,
    "order": 80,
@@ -337,7 +359,10 @@
    "id": "kern",
    "naam": "Kern",
    "afdeling": "competitie",
-   "trainers": "Lander en Antoinette",
+   "trainers": [
+    "lander-mulkers",
+    "antoinette-konings"
+   ],
    "omschrijving": "",
    "zichtbaar": true,
    "order": 90,
