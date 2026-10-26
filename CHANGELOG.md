@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.5.2] – 2026-10-26 – `dev`
+
+### Gewijzigd
+- Startpagina: tekst in de twee grote vlakken onder de titel (Zwemschool, Competitie) is gecentreerd.
+
 ## [0.5.1] – 2026-10-26 – `dev`
 
 ### Gewijzigd
