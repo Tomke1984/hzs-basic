@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.4.1] – 2026-10-26 – `dev`
+
+### Toegevoegd
+- Knoppen **Aanpassen** en **Verwijderen** per trainer in het trainersoverzicht (verwijderen vraagt eerst bevestiging).
+
 ## [0.4.0] – 2026-10-26 – `dev`
 
 ### Toegevoegd

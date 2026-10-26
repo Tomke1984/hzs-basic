@@ -951,7 +951,9 @@ function admin_trainers(): void {
         $af = array_map(fn($a) => '<span class="tag' . ($a === 'competitie' ? ' sys' : '') . '">' . e(AFDELINGEN[$a]) . '</span>', trainer_afdelingen($t));
         $rows .= '<tr><td class="ph">' . trainer_photo($t, 'thumb round') . '</td><td><a href="' . e(url('/beheer/trainers/bewerk/?id=' . $t['id'])) . '"><b>' . e($t['naam']) . '</b></a><br>' . implode(' ', $af)
             . (in_array('competitie', trainer_afdelingen($t), true) && empty($t['toon_contact']) ? ' <span class="tag off">contact verborgen</span>' : '')
-            . '</td><td class="num">' . e($t['telefoon'] ?: '—') . '</td><td>' . e($t['email'] ?: '—') . '</td><td class="muted">' . e($gn ?: 'geen groep') . '</td></tr>';
+            . '</td><td class="num">' . e($t['telefoon'] ?: '—') . '</td><td>' . e($t['email'] ?: '—') . '</td><td class="muted">' . e($gn ?: 'geen groep') . '</td>'
+            . '<td class="actions"><a class="btn ghost small" href="' . e(url('/beheer/trainers/bewerk/?id=' . $t['id'])) . '">Aanpassen</a> '
+            . delete_button('/beheer/trainers/verwijder/', $t['id'], 'Trainer "' . $t['naam'] . '" verwijderen? De trainer verdwijnt ook uit alle groepen.') . '</td></tr>';
     }
     $link = function (string $type, string $fallback) {
         foreach (pages() as $p) if (($p['type'] ?? '') === $type) return '<a href="' . e(url($p['path'])) . '" target="_blank" rel="noopener">' . e($p['title']) . '</a>';
@@ -961,7 +963,7 @@ function admin_trainers(): void {
         . '<p class="muted small"><b>Competitie</b>: per groep met foto, telefoon en e-mail op ' . $link('trainers', 'de trainerspagina') . '. '
         . '<b>Zwemschool</b>: met foto en naam in het overzicht op ' . $link('trainers_zwemschool', 'de zwemschoolpagina') . '. '
         . 'Koppel trainers aan groepen hier of bij <a href="' . e(url('/beheer/groepen/')) . '">Groepen &amp; uren</a>; hun namen verschijnen ook bij de uren.</p>'
-        . ($rows ? '<div class="table-wrap"><table class="list"><thead><tr><th></th><th>Naam</th><th>Telefoon</th><th>E-mail</th><th>Groepen</th></tr></thead><tbody>' . $rows . '</tbody></table></div>' : '<p class="empty">Nog geen trainers.</p>');
+        . ($rows ? '<div class="table-wrap"><table class="list"><thead><tr><th></th><th>Naam</th><th>Telefoon</th><th>E-mail</th><th>Groepen</th><th></th></tr></thead><tbody>' . $rows . '</tbody></table></div>' : '<p class="empty">Nog geen trainers.</p>');
     admin_page('Trainers', $c, 'trainers');
 }
 

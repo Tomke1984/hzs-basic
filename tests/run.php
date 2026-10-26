@@ -239,6 +239,8 @@ http('POST', '/beheer/trainers/bewerk/?id=sofie-peeters', ['_csrf' => $t, 'id' =
 ok(!str_contains(get('/competitie/trainingsuren/')['body'], 'Sofie'), 'loskoppelen van een groep werkt');
 $gr = get('/beheer/groepen/bewerk/?id=kern')['body'];
 ok(str_contains($gr, 'name="trainers[]" value="lander-mulkers" checked'), 'groepsformulier toont trainers als keuzelijst');
+$tl = get('/beheer/trainers/')['body'];
+ok(str_contains($tl, 'href="/beheer/trainers/bewerk/?id=lander-mulkers">Aanpassen</a>') && str_contains($tl, 'action="/beheer/trainers/verwijder/"'), 'trainersoverzicht heeft knoppen Aanpassen en Verwijderen');
 $pages = json_decode(file_get_contents("$tmp/data/pages.json"), true)['pages'];
 $contact = array_values(array_filter($pages, fn($p) => $p['path'] === '/club/contact/'))[0];
 http('POST', '/beheer/paginas/bewerk/?id=' . $contact['id'], ['_csrf' => $t, 'id' => $contact['id'], 'title' => $contact['title'], 'menu_title' => '', 'parent' => '/club/', 'slug' => 'contact',
