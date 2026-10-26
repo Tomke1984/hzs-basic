@@ -9,7 +9,9 @@
    "afdelingen": [
     "competitie"
    ],
-   "foto": ""
+   "foto": "",
+   "voornaam": "Lander",
+   "achternaam": "Mulkers"
   },
   {
    "id": "antoinette-konings",
@@ -20,7 +22,9 @@
    "afdelingen": [
     "competitie"
    ],
-   "foto": ""
+   "foto": "",
+   "voornaam": "Antoinette",
+   "achternaam": "Konings"
   },
   {
    "id": "mirte-bielen",
@@ -31,7 +35,9 @@
    "afdelingen": [
     "competitie"
    ],
-   "foto": ""
+   "foto": "",
+   "voornaam": "Mirte",
+   "achternaam": "Bielen"
   },
   {
    "id": "jolien-vanhentenrijk",
@@ -42,7 +48,9 @@
    "afdelingen": [
     "competitie"
    ],
-   "foto": ""
+   "foto": "",
+   "voornaam": "Jolien",
+   "achternaam": "Vanhentenrijk"
   },
   {
    "id": "jorien-bielen",
@@ -54,7 +62,9 @@
     "competitie",
     "zwemschool"
    ],
-   "foto": ""
+   "foto": "",
+   "voornaam": "Jorien",
+   "achternaam": "Bielen"
   },
   {
    "id": "ine-bijnens",
@@ -65,7 +75,9 @@
    "afdelingen": [
     "zwemschool"
    ],
-   "foto": ""
+   "foto": "",
+   "voornaam": "Ine",
+   "achternaam": "Bijnens"
   },
   {
    "id": "dimitry",
@@ -76,7 +88,9 @@
    "afdelingen": [
     "competitie"
    ],
-   "foto": ""
+   "foto": "",
+   "voornaam": "Dimitry",
+   "achternaam": ""
   },
   {
    "id": "jelle",
@@ -87,7 +101,9 @@
    "afdelingen": [
     "competitie"
    ],
-   "foto": ""
+   "foto": "",
+   "voornaam": "Jelle",
+   "achternaam": ""
   }
  ]
 }

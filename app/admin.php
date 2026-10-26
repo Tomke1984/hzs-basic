@@ -971,14 +971,16 @@ function admin_trainer_edit(): void {
     $data = load('trainers', ['trainers' => []]);
     $id = (string)($_GET['id'] ?? post('id'));
     $t = null;
-    foreach ($data['trainers'] as $x) if ($x['id'] === $id) $t = $x;
+    foreach ($data['trainers'] as $x) if ($x['id'] === $id) $t = trainer_normalize($x);
     if ($id !== '' && !$t) { flash('Trainer niet gevonden.', 'error'); redirect('/beheer/trainers/'); }
     $isNew = !$t;
-    $t = $t ?? ['id' => '', 'naam' => '', 'telefoon' => '', 'email' => '', 'toon_contact' => true, 'afdelingen' => [], 'foto' => ''];
+    $t = $t ?? ['id' => '', 'voornaam' => '', 'achternaam' => '', 'naam' => '', 'telefoon' => '', 'email' => '', 'toon_contact' => true, 'afdelingen' => [], 'foto' => ''];
     $sel = $isNew ? [] : array_column(trainer_groups($t['id']), 'id');
     $errors = [];
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $t['naam'] = mb_substr(post('naam'), 0, 80);
+        $t['voornaam'] = mb_substr(post('voornaam'), 0, 40);
+        $t['achternaam'] = mb_substr(post('achternaam'), 0, 60);
+        $t['naam'] = trim($t['voornaam'] . ' ' . $t['achternaam']);
         $t['telefoon'] = mb_substr(post('telefoon'), 0, 30);
         $t['email'] = strtolower(post('email'));
         $t['toon_contact'] = (bool)post('toon_contact', '');
@@ -986,11 +988,11 @@ function admin_trainer_edit(): void {
         $foto = post('foto');
         $t['foto'] = ($foto === '' || preg_match('#^/uploads/[A-Za-z0-9/_.-]+\.(jpe?g|png|gif|webp)$#i', $foto)) ? $foto : ($t['foto'] ?? '');
         $sel = array_values(array_filter((array)($_POST['groepen'] ?? []), 'is_string'));
-        if ($t['naam'] === '') $errors[] = 'Vul de naam van de trainer in.';
+        if ($t['voornaam'] === '') $errors[] = 'Vul de voornaam van de trainer in.';
         if (!$t['afdelingen']) $errors[] = 'Kies of de trainer bij de competitie, de zwemschool of beide hoort.';
         if ($t['email'] !== '' && !filter_var($t['email'], FILTER_VALIDATE_EMAIL)) $errors[] = 'Het e-mailadres is niet geldig.';
         if ($t['telefoon'] !== '' && !preg_match('/^[0-9 +().\/-]{6,30}$/', $t['telefoon'])) $errors[] = 'Het telefoonnummer mag enkel cijfers, spaties en + . / - ( ) bevatten.';
-        foreach ($data['trainers'] as $x) if ($x['id'] !== $t['id'] && mb_strtolower($x['naam']) === mb_strtolower($t['naam'])) $errors[] = 'Er bestaat al een trainer met deze naam.';
+        foreach ($data['trainers'] as $x) if ($x['id'] !== $t['id'] && mb_strtolower(trainer_normalize($x)['naam']) === mb_strtolower($t['naam'])) $errors[] = 'Er bestaat al een trainer met deze voornaam en naam.';
         if (!$errors) {
             if ($isNew) {
                 $base = slugify($t['naam']); $slug = $base; $i = 2;
@@ -1018,7 +1020,8 @@ function admin_trainer_edit(): void {
     }
     $f = ($errors ? '<div class="alert alert-error"><ul>' . implode('', array_map(fn($x) => '<li>' . e($x) . '</li>', array_unique($errors))) . '</ul></div>' : '')
         . '<input type="hidden" name="id" value="' . e($t['id']) . '">'
-        . field('Naam', input('naam', $t['naam'], 'text', 'required maxlength="80" placeholder="Voornaam Achternaam"'))
+        . '<div class="grid2">' . field('Voornaam', input('voornaam', $t['voornaam'], 'text', 'required maxlength="40" autocomplete="off"'))
+        . field('Naam', input('achternaam', $t['achternaam'], 'text', 'maxlength="60" autocomplete="off"'), 'Mag leeg blijven. Op de website staat altijd de voornaam eerst.') . '</div>'
         . '<div class="field"><span>Trainer bij</span><div class="checks" style="margin:0">'
         . checkbox('afdelingen[]', in_array('competitie', $t['afdelingen'] ?? [], true), 'Competitie', 'competitie')
         . checkbox('afdelingen[]', in_array('zwemschool', $t['afdelingen'] ?? [], true), 'Zwemschool', 'zwemschool')

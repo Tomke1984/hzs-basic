@@ -60,8 +60,20 @@ function groups(bool $visibleOnly = false): array {
 /* ---------- Trainers ---------- */
 
 function trainers(): array {
-    $t = load('trainers', ['trainers' => []])['trainers'];
-    usort($t, fn($a, $b) => strcasecmp($a['naam'], $b['naam']));
+    $t = array_map('trainer_normalize', load('trainers', ['trainers' => []])['trainers']);
+    usort($t, fn($a, $b) => strcasecmp($a['voornaam'], $b['voornaam']) ?: strcasecmp($a['achternaam'], $b['achternaam']));
+    return $t;
+}
+
+/** Voornaam en naam apart; 'naam' is altijd de volledige naam met de voornaam eerst. */
+function trainer_normalize(array $t): array {
+    if (!isset($t['voornaam'])) {
+        $parts = preg_split('/\s+/', trim((string)($t['naam'] ?? '')), 2);
+        $t['voornaam'] = $parts[0] ?? '';
+        $t['achternaam'] = $parts[1] ?? '';
+    }
+    $t['achternaam'] = (string)($t['achternaam'] ?? '');
+    $t['naam'] = trim($t['voornaam'] . ' ' . $t['achternaam']);
     return $t;
 }
 
@@ -78,8 +90,7 @@ function trainer_ids_from_names(string $names): array {
         $n = mb_strtolower(trim($n));
         if ($n === '') continue;
         foreach (trainers() as $t) {
-            $full = mb_strtolower($t['naam']);
-            if ($full === $n || explode(' ', $full)[0] === $n) { $ids[] = $t['id']; break; }
+            if (mb_strtolower($t['naam']) === $n || mb_strtolower($t['voornaam']) === $n) { $ids[] = $t['id']; break; }
         }
     }
     return array_values(array_unique($ids));
@@ -502,7 +513,7 @@ function render_preview(array $page): string {
 
 /* ================= Gegevens bijwerken bij een nieuwe versie ================= */
 
-const SCHEMA_VERSION = 3;
+const SCHEMA_VERSION = 4;
 
 function run_migrations(): void {
     $meta = load('meta', ['schema' => 1]);
@@ -512,6 +523,7 @@ function run_migrations(): void {
     try {
         if (($meta['schema'] ?? 1) < 2) migrate_to_2();
         if (($meta['schema'] ?? 1) < 3) migrate_to_3();
+        if (($meta['schema'] ?? 1) < 4) migrate_to_4();
         save('meta', ['schema' => SCHEMA_VERSION, 'updated' => date('c')], false);
     } finally {
         flock($lock, LOCK_UN);
@@ -573,4 +585,20 @@ function migrate_to_3(): void {
             'side' => true, 'type' => 'trainers_zwemschool', 'target' => '', 'body' => '<p>[[blok]]</p>'];
         save('pages', $pd);
     }
+}
+
+/** v4: voornaam en naam van trainers apart bewaren. */
+function migrate_to_4(): void {
+    $td = load('trainers', ['trainers' => []]);
+    $changed = false;
+    foreach ($td['trainers'] as &$t) {
+        if (isset($t['voornaam'])) continue;
+        $n = trainer_normalize($t);
+        $t['voornaam'] = $n['voornaam'];
+        $t['achternaam'] = $n['achternaam'];
+        $t['naam'] = $n['naam'];
+        $changed = true;
+    }
+    unset($t);
+    if ($changed) save('trainers', $td);
 }

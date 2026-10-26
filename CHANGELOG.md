@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0] – 2026-10-26 – `dev`
+
+### Gewijzigd
+- Trainers hebben aparte velden **Voornaam** (verplicht) en **Naam** (mag leeg). Overal op de website en in
+  het beheer staat de voornaam eerst; lijsten zijn gesorteerd op voornaam.
+- Gegevens worden automatisch bijgewerkt (versie 4): bestaande namen worden gesplitst (eerste woord = voornaam).
+
 ## [0.4.1] – 2026-10-26 – `dev`
 
 ### Toegevoegd
