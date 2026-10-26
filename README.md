@@ -3,7 +3,7 @@
 Publieke website van de Hasseltse Zwemvereniging Spartacus, met een eigen beheer op `/beheer`.
 De inhoud komt van de vorige site (khzs.be), de vormgeving volgt de HZS-clubapp.
 
-- **PHP 8.0+**, geen database: alle inhoud staat in JSON-bestanden in `data/`.
+- **PHP 8.1+**, geen database: alle inhoud staat in JSON-bestanden in `data/`.
 - **Beheer** (`/beheer`): pagina's, nieuws, kalender (activiteiten, vakanties, sluitingsdagen),
   groepen en les-/trainingsuren, instellingen van de startpagina en voettekst, beheerders en bestanden.
 - **Agenda-abonnementen** per groep op `/kalender/ics/<groep>.ics`, live uit de gegevens.
@@ -36,7 +36,29 @@ php tests/run.php
 Draait een volledige reeks tests (publieke pagina's, afscherming, installatie, aanmelden, pagina's, nieuws,
 kalender, uren, uploads, beveiliging) op een tijdelijke kopie. Je eigen `data/` en `uploads/` blijven onaangeroerd.
 
-## Installeren op de hosting (FTP)
+## Publiceren (automatisch bij push naar `main`)
+
+De workflow `.github/workflows/deploy.yml`:
+
+- draait bij elke push naar `dev` en `main` de testreeks;
+- uploadt bij een push naar `main` (na geslaagde tests) de code via FTPS naar
+  `ftp.omnitbe.webhosting.be`, map `/www_before_autogit/hzs/`;
+- stuurt na de eerste keer enkel gewijzigde bestanden (bijgehouden in `.ftp-deploy-sync-state.json` op de server);
+- raakt `config.php`, `data/` en `uploads/` nooit aan.
+
+Instellingen in GitHub (**Settings → Secrets and variables → Actions**):
+
+| Naam | Soort | Verplicht | Standaard |
+|---|---|---|---|
+| `FTP_PASSWORD` | secret | ja | – |
+| `FTP_PROTOCOL` | variable | nee | `ftps` (zet op `ftp` als de host geen TLS ondersteunt) |
+| `FTP_PORT` | variable | nee | `21` |
+| `FTP_SERVER_DIR` | variable | nee | `/www_before_autogit/hzs/` (moet eindigen op `/`) |
+
+Goedkeuring vóór elke upload: **Settings → Environments → production → Required reviewers** en jezelf toevoegen.
+Proefdraaien zonder te uploaden: **Actions → Testen en publiceren → Run workflow** (op `main`, "Proefdraaien" aangevinkt).
+
+## Handmatig installeren (FTP)
 
 1. Upload alles behalve `.git`, `tests/` en `router.php`.
 2. Maak `config.php` aan op basis van `config.example.php` met een eigen `setup_code`.

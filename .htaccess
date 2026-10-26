@@ -10,7 +10,7 @@ DirectoryIndex index.php
   RewriteRule ^ index.php [QSA,L]
 </IfModule>
 
-<FilesMatch "^(config\.php|config\.example\.php|router\.php|README\.md|CHANGELOG\.md|\.gitignore)$">
+<FilesMatch "^(config\.php|config\.example\.php|router\.php|README\.md|CHANGELOG\.md|\.gitignore|\.ftp-deploy-sync-state\.json)$">
   Require all denied
 </FilesMatch>
 

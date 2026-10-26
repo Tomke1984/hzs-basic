@@ -1,0 +1,72 @@
+name: Testen en publiceren
+
+# dev:  enkel testen
+# main: testen, daarna uploaden naar de hosting via FTP(S)
+on:
+  push:
+    branches: [dev, main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Proefdraaien: tonen wat er zou gebeuren, niets uploaden"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.1"
+          extensions: fileinfo, dom, json
+          coverage: none
+      - name: Syntaxcontrole
+        run: find . -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l
+      - name: Testreeks
+        run: php tests/run.php
+
+  deploy:
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Uploaden naar ${{ vars.FTP_SERVER_DIR || '/www_before_autogit/hzs/' }}
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: ftp.omnitbe.webhosting.be
+          username: tom@omnitbe
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ${{ vars.FTP_PROTOCOL || 'ftps' }}
+          port: ${{ vars.FTP_PORT || 21 }}
+          server-dir: ${{ vars.FTP_SERVER_DIR || '/www_before_autogit/hzs/' }}
+          dry-run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+          log-level: standard
+          # Nooit uploaden of verwijderen: inhoud en instellingen die op de server leven
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            .github/**
+            config.php
+            data/*.json
+            data/*.tmp*
+            data/backup/*.json
+            uploads/*/**
+            tests/**
+            router.php
+            README.md
+            CHANGELOG.md

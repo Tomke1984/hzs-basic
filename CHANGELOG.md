@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.2.0] – 2026-10-26 – `dev`
+
+### Toegevoegd
+- GitHub Actions-workflow: testreeks bij elke push naar `dev` en `main`; bij `main` daarna automatisch
+  publiceren via FTPS naar de hosting (enkel gewijzigde bestanden; `config.php`, `data/` en `uploads/` worden nooit aangeraakt).
+- Handmatig proefdraaien van de publicatie via "Run workflow".
+
+### Gewijzigd
+- Minimale PHP-versie in de documentatie: 8.1.
+- `.ftp-deploy-sync-state.json` is niet via het web leesbaar.
+
 ## [0.1.0] – 2026-10-26 – `dev`
 
 ### Toegevoegd
