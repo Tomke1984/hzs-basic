@@ -1,0 +1,404 @@
+{
+ "groups": [
+  {
+   "id": "zwemschool",
+   "naam": "Zwemschool",
+   "afdeling": "zwemschool",
+   "trainers": "",
+   "omschrijving": "",
+   "zichtbaar": true,
+   "order": 10,
+   "trainingen": [
+    {
+     "dag": "di",
+     "van": "17:30",
+     "tot": "18:30",
+     "soort": "Zwemles",
+     "plaats": "Zwembad – groot bad"
+    },
+    {
+     "dag": "do",
+     "van": "16:30",
+     "tot": "17:30",
+     "soort": "Zwemles",
+     "plaats": "Zwembad – groot bad"
+    },
+    {
+     "dag": "vr",
+     "van": "16:30",
+     "tot": "17:30",
+     "soort": "Zwemles",
+     "plaats": "Zwembad – groot bad"
+    },
+    {
+     "dag": "vr",
+     "van": "17:30",
+     "tot": "18:30",
+     "soort": "Zwemles",
+     "plaats": "Zwembad – groot bad"
+    },
+    {
+     "dag": "za",
+     "van": "08:00",
+     "tot": "09:00",
+     "soort": "Zwemles",
+     "plaats": "Zwembad – groot bad"
+    },
+    {
+     "dag": "za",
+     "van": "09:00",
+     "tot": "10:00",
+     "soort": "Zwemles",
+     "plaats": "Zwembad – groot bad"
+    }
+   ]
+  },
+  {
+   "id": "pre-competitie-1",
+   "naam": "Pré-competitie 1",
+   "afdeling": "zwemschool",
+   "trainers": "",
+   "omschrijving": "",
+   "zichtbaar": true,
+   "order": 20,
+   "trainingen": [
+    {
+     "dag": "di",
+     "van": "19:00",
+     "tot": "20:00",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad – 2 banen"
+    },
+    {
+     "dag": "do",
+     "van": "17:00",
+     "tot": "18:00",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad – 1 baan"
+    },
+    {
+     "dag": "za",
+     "van": "09:00",
+     "tot": "10:00",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad – 1 baan"
+    }
+   ]
+  },
+  {
+   "id": "pre-competitie-2",
+   "naam": "Pré-competitie 2",
+   "afdeling": "zwemschool",
+   "trainers": "",
+   "omschrijving": "",
+   "zichtbaar": true,
+   "order": 30,
+   "trainingen": [
+    {
+     "dag": "za",
+     "van": "09:00",
+     "tot": "10:00",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad – 1 baan"
+    }
+   ]
+  },
+  {
+   "id": "competitie-3",
+   "naam": "Competitie 3",
+   "afdeling": "competitie",
+   "trainers": "Jorien",
+   "omschrijving": "",
+   "zichtbaar": true,
+   "order": 40,
+   "trainingen": [
+    {
+     "dag": "di",
+     "van": "18:30",
+     "tot": "20:00",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad"
+    },
+    {
+     "dag": "wo",
+     "van": "16:30",
+     "tot": "18:30",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad"
+    },
+    {
+     "dag": "do",
+     "van": "17:30",
+     "tot": "18:30",
+     "soort": "Droogtraining",
+     "plaats": ""
+    },
+    {
+     "dag": "za",
+     "van": "07:00",
+     "tot": "07:30",
+     "soort": "Droogtraining",
+     "plaats": ""
+    },
+    {
+     "dag": "za",
+     "van": "07:30",
+     "tot": "09:00",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad"
+    }
+   ]
+  },
+  {
+   "id": "competitie-2",
+   "naam": "Competitie 2",
+   "afdeling": "competitie",
+   "trainers": "Dimitry en Jelle",
+   "omschrijving": "",
+   "zichtbaar": true,
+   "order": 50,
+   "trainingen": [
+    {
+     "dag": "ma",
+     "van": "18:00",
+     "tot": "20:00",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad"
+    },
+    {
+     "dag": "wo",
+     "van": "18:30",
+     "tot": "20:30",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad"
+    },
+    {
+     "dag": "do",
+     "van": "17:30",
+     "tot": "18:30",
+     "soort": "Droogtraining",
+     "plaats": ""
+    },
+    {
+     "dag": "vr",
+     "van": "16:30",
+     "tot": "18:00",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad"
+    },
+    {
+     "dag": "za",
+     "van": "07:00",
+     "tot": "09:00",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad"
+    }
+   ]
+  },
+  {
+   "id": "beloften",
+   "naam": "Beloften",
+   "afdeling": "competitie",
+   "trainers": "Dimitry en Jelle",
+   "omschrijving": "",
+   "zichtbaar": true,
+   "order": 60,
+   "trainingen": [
+    {
+     "dag": "ma",
+     "van": "18:00",
+     "tot": "20:00",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad"
+    },
+    {
+     "dag": "wo",
+     "van": "16:30",
+     "tot": "18:30",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad"
+    },
+    {
+     "dag": "do",
+     "van": "17:30",
+     "tot": "18:30",
+     "soort": "Droogtraining",
+     "plaats": ""
+    },
+    {
+     "dag": "do",
+     "van": "18:30",
+     "tot": "20:00",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad"
+    },
+    {
+     "dag": "vr",
+     "van": "16:30",
+     "tot": "18:00",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad"
+    },
+    {
+     "dag": "za",
+     "van": "07:00",
+     "tot": "09:00",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad"
+    }
+   ]
+  },
+  {
+   "id": "competitie-1-provinciaal",
+   "naam": "Competitie 1 provinciaal",
+   "afdeling": "competitie",
+   "trainers": "Jelle",
+   "omschrijving": "",
+   "zichtbaar": true,
+   "order": 70,
+   "trainingen": [
+    {
+     "dag": "wo",
+     "van": "16:30",
+     "tot": "18:30",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad"
+    },
+    {
+     "dag": "vr",
+     "van": "18:30",
+     "tot": "20:00",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad"
+    },
+    {
+     "dag": "za",
+     "van": "07:00",
+     "tot": "09:00",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad"
+    }
+   ]
+  },
+  {
+   "id": "competitie-1-nationaal",
+   "naam": "Competitie 1 nationaal",
+   "afdeling": "competitie",
+   "trainers": "Lander en Antoinette",
+   "omschrijving": "",
+   "zichtbaar": true,
+   "order": 80,
+   "trainingen": [
+    {
+     "dag": "ma",
+     "van": "18:00",
+     "tot": "20:00",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad"
+    },
+    {
+     "dag": "wo",
+     "van": "18:30",
+     "tot": "20:30",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad"
+    },
+    {
+     "dag": "do",
+     "van": "18:00",
+     "tot": "18:30",
+     "soort": "Droogtraining",
+     "plaats": ""
+    },
+    {
+     "dag": "do",
+     "van": "18:30",
+     "tot": "20:00",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad"
+    },
+    {
+     "dag": "vr",
+     "van": "18:00",
+     "tot": "20:00",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad"
+    },
+    {
+     "dag": "za",
+     "van": "07:00",
+     "tot": "09:00",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad"
+    }
+   ]
+  },
+  {
+   "id": "kern",
+   "naam": "Kern",
+   "afdeling": "competitie",
+   "trainers": "Lander en Antoinette",
+   "omschrijving": "",
+   "zichtbaar": true,
+   "order": 90,
+   "trainingen": [
+    {
+     "dag": "ma",
+     "van": "18:00",
+     "tot": "20:00",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad"
+    },
+    {
+     "dag": "di",
+     "van": "17:30",
+     "tot": "18:30",
+     "soort": "Droogtraining",
+     "plaats": ""
+    },
+    {
+     "dag": "di",
+     "van": "18:30",
+     "tot": "20:00",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad"
+    },
+    {
+     "dag": "wo",
+     "van": "18:30",
+     "tot": "20:30",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad"
+    },
+    {
+     "dag": "do",
+     "van": "18:00",
+     "tot": "18:30",
+     "soort": "Droogtraining",
+     "plaats": ""
+    },
+    {
+     "dag": "do",
+     "van": "18:30",
+     "tot": "20:00",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad"
+    },
+    {
+     "dag": "vr",
+     "van": "18:00",
+     "tot": "20:00",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad"
+    },
+    {
+     "dag": "za",
+     "van": "07:00",
+     "tot": "09:00",
+     "soort": "Zwemmen",
+     "plaats": "Zwembad"
+    }
+   ]
+  }
+ ]
+}

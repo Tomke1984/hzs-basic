@@ -1,0 +1,61 @@
+{
+ "hero_title": "Hasseltse Zwemvereniging",
+ "hero_title_accent": "Spartacus",
+ "hero_intro": "<p>Zwemclub in Hasselt voor <strong>zwemschool</strong>, recreatie en <strong>competitie</strong>, gedragen door vrijwilligers.</p><p>Bekijk de les- en trainingsuren, schrijf je kind in voor de zwemtest of word lid.</p>",
+ "hero_buttons": [
+  {
+   "label": "Kind inschrijven voor de zwemschool",
+   "path": "/zwemschool/inschrijven/"
+  },
+  {
+   "label": "Les- en trainingsuren",
+   "path": "/zwemschool/lesuren/"
+  },
+  {
+   "label": "Lid worden",
+   "path": "/lid-worden/"
+  }
+ ],
+ "lanes": [
+  {
+   "title": "Zwemschool",
+   "text": "Alles over lessen, groepen en de zwemtest.",
+   "path": "/zwemschool/"
+  },
+  {
+   "title": "Competitie",
+   "text": "Trainingen, wedstrijden en clubrecords.",
+   "path": "/competitie/"
+  }
+ ],
+ "cta_label": "Inschrijven zwemtest",
+ "cta_path": "/zwemschool/inschrijven/",
+ "footer_tagline": "Zwemschool, recreatie en competitie in Hasselt.",
+ "emails": [
+  "secretariaat@khzs.be",
+  "zwemschool@khzs.be"
+ ],
+ "facebook": "https://www.facebook.com/HasseltseZwemverenigingSpartacus",
+ "footer_links": [
+  {
+   "label": "Inschrijven zwemtest",
+   "path": "/zwemschool/inschrijven/"
+  },
+  {
+   "label": "Lesuren zwemschool",
+   "path": "/zwemschool/lesuren/"
+  },
+  {
+   "label": "Trainingsuren competitie",
+   "path": "/competitie/trainingsuren/"
+  },
+  {
+   "label": "Kalender",
+   "path": "/kalender/"
+  },
+  {
+   "label": "Aanspreekpunt integriteit",
+   "path": "/club/integriteit/"
+  }
+ ]
+}

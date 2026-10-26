@@ -1,0 +1,297 @@
+{
+ "seizoen": {
+  "begin": "2026-09-01",
+  "einde": "2027-06-30"
+ },
+ "events": [
+  {
+   "id": "437a4381b196",
+   "titel": "Provinciaal kampioenschap 2026",
+   "type": "wedstrijd",
+   "start": "2026-10-03",
+   "einde": "2026-10-04",
+   "hele_dag": true,
+   "van": "",
+   "tot": "",
+   "locatie": "zwembad Kapermolen",
+   "omschrijving": "",
+   "groepen": [
+    "competitie-3",
+    "competitie-2",
+    "beloften",
+    "competitie-1-provinciaal",
+    "competitie-1-nationaal",
+    "kern"
+   ]
+  },
+  {
+   "id": "03d77e503506",
+   "titel": "Herentals 400meters",
+   "type": "wedstrijd",
+   "start": "2026-10-10",
+   "einde": "",
+   "hele_dag": false,
+   "van": "14:00",
+   "tot": "20:00",
+   "locatie": "",
+   "omschrijving": "",
+   "groepen": [
+    "competitie-3",
+    "competitie-2",
+    "beloften",
+    "competitie-1-provinciaal",
+    "competitie-1-nationaal",
+    "kern"
+   ]
+  },
+  {
+   "id": "830b6ddc978d",
+   "titel": "Hasselt 200meters 2026",
+   "type": "wedstrijd",
+   "start": "2026-10-18",
+   "einde": "",
+   "hele_dag": true,
+   "van": "",
+   "tot": "",
+   "locatie": "zwembad Kapermolen",
+   "omschrijving": "",
+   "groepen": [
+    "competitie-3",
+    "competitie-2",
+    "beloften",
+    "competitie-1-provinciaal",
+    "competitie-1-nationaal",
+    "kern"
+   ]
+  },
+  {
+   "id": "ecd6beeff9f2",
+   "titel": "Vlaams jeugdkampioenschap korte baan",
+   "type": "wedstrijd",
+   "start": "2026-10-30",
+   "einde": "2026-11-01",
+   "hele_dag": true,
+   "van": "",
+   "tot": "",
+   "locatie": "Diksmuide",
+   "omschrijving": "",
+   "groepen": [
+    "competitie-3",
+    "competitie-2",
+    "beloften",
+    "competitie-1-provinciaal",
+    "competitie-1-nationaal",
+    "kern"
+   ]
+  },
+  {
+   "id": "e93bc5578ee8",
+   "titel": "Flanders Open short course (17+)",
+   "type": "wedstrijd",
+   "start": "2026-11-06",
+   "einde": "2026-11-08",
+   "hele_dag": true,
+   "van": "",
+   "tot": "",
+   "locatie": "",
+   "omschrijving": "",
+   "groepen": [
+    "competitie-3",
+    "competitie-2",
+    "beloften",
+    "competitie-1-provinciaal",
+    "competitie-1-nationaal",
+    "kern"
+   ]
+  },
+  {
+   "id": "a42ccf3f9da9",
+   "titel": "Jeugdcriterium Genk",
+   "type": "wedstrijd",
+   "start": "2026-11-11",
+   "einde": "",
+   "hele_dag": true,
+   "van": "",
+   "tot": "",
+   "locatie": "",
+   "omschrijving": "",
+   "groepen": [
+    "competitie-3",
+    "competitie-2",
+    "beloften",
+    "competitie-1-provinciaal",
+    "competitie-1-nationaal",
+    "kern"
+   ]
+  },
+  {
+   "id": "bb4097b65583",
+   "titel": "Speedocup",
+   "type": "wedstrijd",
+   "start": "2026-11-14",
+   "einde": "",
+   "hele_dag": true,
+   "van": "",
+   "tot": "",
+   "locatie": "Leuven",
+   "omschrijving": "",
+   "groepen": [
+    "competitie-3",
+    "competitie-2",
+    "beloften",
+    "competitie-1-provinciaal",
+    "competitie-1-nationaal",
+    "kern"
+   ]
+  },
+  {
+   "id": "d0465eacaffd",
+   "titel": "BK zwemmen korte baan (11-16j)",
+   "type": "wedstrijd",
+   "start": "2026-11-20",
+   "einde": "2026-11-22",
+   "hele_dag": true,
+   "van": "",
+   "tot": "",
+   "locatie": "Bastogne",
+   "omschrijving": "",
+   "groepen": [
+    "competitie-3",
+    "competitie-2",
+    "beloften",
+    "competitie-1-provinciaal",
+    "competitie-1-nationaal",
+    "kern"
+   ]
+  },
+  {
+   "id": "bac52310899f",
+   "titel": "Vlaams Herfstcriterium korte baan",
+   "type": "wedstrijd",
+   "start": "2026-11-27",
+   "einde": "2026-11-29",
+   "hele_dag": true,
+   "van": "",
+   "tot": "",
+   "locatie": "Gent",
+   "omschrijving": "",
+   "groepen": [
+    "competitie-3",
+    "competitie-2",
+    "beloften",
+    "competitie-1-provinciaal",
+    "competitie-1-nationaal",
+    "kern"
+   ]
+  },
+  {
+   "id": "cf2686e3a827",
+   "titel": "Open Belgische kampioenschap korte baan",
+   "type": "wedstrijd",
+   "start": "2026-12-18",
+   "einde": "2026-12-20",
+   "hele_dag": true,
+   "van": "",
+   "tot": "",
+   "locatie": "Sint-Niklaas",
+   "omschrijving": "",
+   "groepen": [
+    "competitie-3",
+    "competitie-2",
+    "beloften",
+    "competitie-1-provinciaal",
+    "competitie-1-nationaal",
+    "kern"
+   ]
+  },
+  {
+   "id": "414be4612272",
+   "titel": "X-mas balls",
+   "type": "club",
+   "start": "2026-12-23",
+   "einde": "",
+   "hele_dag": false,
+   "van": "17:00",
+   "tot": "20:00",
+   "locatie": "Bree",
+   "omschrijving": "",
+   "groepen": []
+  },
+  {
+   "id": "0064fcc08eb5",
+   "titel": "Winterstage 2026",
+   "type": "stage",
+   "start": "2026-12-26",
+   "einde": "2026-12-30",
+   "hele_dag": true,
+   "van": "",
+   "tot": "",
+   "locatie": "Ubach",
+   "omschrijving": "",
+   "groepen": [
+    "competitie-3",
+    "competitie-2",
+    "beloften",
+    "competitie-1-provinciaal",
+    "competitie-1-nationaal",
+    "kern"
+   ]
+  }
+ ],
+ "vakanties": [
+  {
+   "id": "95cefbef3de7",
+   "naam": "Herfstvakantie",
+   "van": "2026-10-26",
+   "tot": "2026-11-08",
+   "geen_les": []
+  },
+  {
+   "id": "fb568eaa5d60",
+   "naam": "Kerstvakantie",
+   "van": "2026-12-21",
+   "tot": "2027-01-03",
+   "geen_les": [
+    "zwemschool"
+   ]
+  },
+  {
+   "id": "358fc3687d50",
+   "naam": "Krokusvakantie",
+   "van": "2027-02-15",
+   "tot": "2027-02-28",
+   "geen_les": []
+  },
+  {
+   "id": "5025e60d2125",
+   "naam": "Paasvakantie",
+   "van": "2027-03-29",
+   "tot": "2027-04-11",
+   "geen_les": [
+    "zwemschool"
+   ]
+  }
+ ],
+ "sluitingsdagen": [
+  {
+   "id": "090962706dda",
+   "datum": "2026-11-01",
+   "reden": "Allerheiligen"
+  },
+  {
+   "id": "b703917e5499",
+   "datum": "2026-11-11",
+   "reden": "Wapenstilstand"
+  },
+  {
+   "id": "c3c1a54dc410",
+   "datum": "2026-12-25",
+   "reden": "Kerstmis"
+  },
+  {
+   "id": "e84e2bae9962",
+   "datum": "2027-01-01",
+   "reden": "Nieuwjaar"
+  }
+ ]
+}

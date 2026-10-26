@@ -1,0 +1,14 @@
+# Lokale instellingen (bevat de installatiecode)
+config.php
+
+# Inhoud en accounts die het beheer aanmaakt – nooit in git
+data/*.json
+data/*.tmp*
+data/backup/*
+!data/backup/.keep
+uploads/*
+!uploads/.htaccess
+
+# Systeem
+.DS_Store
+*.log
