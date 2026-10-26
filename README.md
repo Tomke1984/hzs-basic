@@ -41,7 +41,7 @@ kalender, uren, uploads, beveiliging) op een tijdelijke kopie. Je eigen `data/` 
 De workflow `.github/workflows/deploy.yml`:
 
 - draait bij elke push naar `dev` en `main` de testreeks;
-- uploadt bij een push naar `main` (na geslaagde tests) de code via FTPS naar
+- uploadt bij een push naar `main` (na geslaagde tests) de code via FTP naar
   `ftp.omnitbe.webhosting.be`, map `/www_before_autogit/hzs/`;
 - stuurt na de eerste keer enkel gewijzigde bestanden (bijgehouden in `.ftp-deploy-sync-state.json` op de server);
 - raakt `config.php`, `data/` en `uploads/` nooit aan.
@@ -51,7 +51,7 @@ Instellingen in GitHub (**Settings → Secrets and variables → Actions**):
 | Naam | Soort | Verplicht | Standaard |
 |---|---|---|---|
 | `FTP_PASSWORD` | secret | ja | – |
-| `FTP_PROTOCOL` | variable | nee | `ftps` (zet op `ftp` als de host geen TLS ondersteunt) |
+| `FTP_PROTOCOL` | variable | nee | `ftp` (de host ondersteunt geen FTPS op poort 21; let op: onversleuteld) |
 | `FTP_PORT` | variable | nee | `21` |
 | `FTP_SERVER_DIR` | variable | nee | `/www_before_autogit/hzs/` (moet eindigen op `/`) |
 

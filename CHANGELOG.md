@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.2.1] – 2026-10-26 – `dev`, `main`
+
+### Gewijzigd
+- Publiceren gebruikt standaard gewoon FTP: de hosting ondersteunt geen FTPS (`500 AUTH not understood`).
+
 ## [0.2.0] – 2026-10-26 – `dev`
 
 ### Toegevoegd
