@@ -117,7 +117,7 @@
    ],
    "omschrijving": "",
    "zichtbaar": true,
-   "order": 40,
+   "order": 160,
    "trainingen": [
     {
      "dag": "di",
@@ -167,7 +167,7 @@
    ],
    "omschrijving": "",
    "zichtbaar": true,
-   "order": 50,
+   "order": 150,
    "trainingen": [
     {
      "dag": "ma",
@@ -217,7 +217,7 @@
    ],
    "omschrijving": "",
    "zichtbaar": true,
-   "order": 60,
+   "order": 140,
    "trainingen": [
     {
      "dag": "ma",
@@ -274,7 +274,7 @@
    ],
    "omschrijving": "",
    "zichtbaar": true,
-   "order": 70,
+   "order": 130,
    "trainingen": [
     {
      "dag": "wo",
@@ -309,7 +309,7 @@
    ],
    "omschrijving": "",
    "zichtbaar": true,
-   "order": 80,
+   "order": 120,
    "trainingen": [
     {
      "dag": "ma",
@@ -365,7 +365,7 @@
    ],
    "omschrijving": "",
    "zichtbaar": true,
-   "order": 90,
+   "order": 110,
    "trainingen": [
     {
      "dag": "ma",

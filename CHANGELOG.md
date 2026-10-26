@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.1] – 2026-10-26 – `dev`
+
+### Gewijzigd
+- Volgorde van de competitiegroepen (trainerspagina en trainingsuren): Kern – Competitie 1 nationaal –
+  Competitie 1 provinciaal – Beloften – Competitie 2 – Competitie 3. Bestaande gegevens worden mee aangepast
+  (versie 5), tenzij de volgorde al zelf gewijzigd was in het beheer.
+
 ## [0.5.0] – 2026-10-26 – `dev`
 
 ### Gewijzigd

@@ -513,7 +513,7 @@ function render_preview(array $page): string {
 
 /* ================= Gegevens bijwerken bij een nieuwe versie ================= */
 
-const SCHEMA_VERSION = 4;
+const SCHEMA_VERSION = 5;
 
 function run_migrations(): void {
     $meta = load('meta', ['schema' => 1]);
@@ -524,6 +524,7 @@ function run_migrations(): void {
         if (($meta['schema'] ?? 1) < 2) migrate_to_2();
         if (($meta['schema'] ?? 1) < 3) migrate_to_3();
         if (($meta['schema'] ?? 1) < 4) migrate_to_4();
+        if (($meta['schema'] ?? 1) < 5) migrate_to_5();
         save('meta', ['schema' => SCHEMA_VERSION, 'updated' => date('c')], false);
     } finally {
         flock($lock, LOCK_UN);
@@ -601,4 +602,17 @@ function migrate_to_4(): void {
     }
     unset($t);
     if ($changed) save('trainers', $td);
+}
+
+/** v5: competitiegroepen in de volgorde Kern – Competitie 1 – Beloften – Competitie 2 – Competitie 3.
+ *  Enkel als de volgorde nog de oorspronkelijke is (niet zelf aangepast in het beheer). */
+function migrate_to_5(): void {
+    $orig = ['competitie-3' => 40, 'competitie-2' => 50, 'beloften' => 60, 'competitie-1-provinciaal' => 70, 'competitie-1-nationaal' => 80, 'kern' => 90];
+    $new = ['kern' => 110, 'competitie-1-nationaal' => 120, 'competitie-1-provinciaal' => 130, 'beloften' => 140, 'competitie-2' => 150, 'competitie-3' => 160];
+    $d = load('groups', ['groups' => []]);
+    $cur = array_column($d['groups'], 'order', 'id');
+    foreach ($orig as $id => $o) if (isset($cur[$id]) && (int)$cur[$id] !== $o) return;
+    foreach ($d['groups'] as &$g) if (isset($new[$g['id']])) $g['order'] = $new[$g['id']];
+    unset($g);
+    save('groups', $d);
 }
