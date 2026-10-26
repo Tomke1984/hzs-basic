@@ -389,6 +389,21 @@
    "type": "kalender",
    "target": "",
    "body": "<p>Wedstrijden, stages en clubactiviteiten van het seizoen. Les- en trainingsuren vind je bij <a href=\"/zwemschool/lesuren/\">lesuren zwemschool</a> en <a href=\"/competitie/trainingsuren/\">trainingsuren competitie</a>.</p>\n<p>[[blok]]</p>\n<h3>Lessen tijdens de schoolvakanties – groep 1 tot 6</h3>\n<div class=\"table-wrap\"><table><thead><tr><th>Maand</th><th>Vakantie</th><th>Lessen</th></tr></thead><tbody>\n<tr><td>November</td><td>Herfstvakantie</td><td>Lessen volgens de normale uren van de zwemschool</td></tr>\n<tr><td>December</td><td>Kerstvakantie</td><td>Geen zwemlessen</td></tr>\n<tr><td>Februari</td><td>Krokusvakantie</td><td>Lessen volgens de normale uren van de zwemschool</td></tr>\n<tr><td>April</td><td>Paasvakantie</td><td>Geen zwemlessen</td></tr>\n<tr><td>Juli</td><td>Zomervakantie</td><td>Geen zwemlessen</td></tr>\n<tr><td>Augustus</td><td>Zomervakantie</td><td>Geen zwemlessen</td></tr>\n</tbody></table></div>\n<h3>Lessen tijdens de schoolvakanties – pré-competitie 1 en 2</h3>\n<div class=\"table-wrap\"><table><thead><tr><th>Maand</th><th>Vakantie</th><th>Lessen</th></tr></thead><tbody>\n<tr><td>November</td><td>Herfstvakantie</td><td>Lessen volgens de normale uren van de zwemschool</td></tr>\n<tr><td>December</td><td>Kerstvakantie</td><td>Lessen volgens de normale uren van de zwemschool (indien er afwijkingen zijn, worden deze meegedeeld)</td></tr>\n<tr><td>Februari</td><td>Krokusvakantie</td><td>Lessen volgens de normale uren van de zwemschool</td></tr>\n<tr><td>April</td><td>Paasvakantie</td><td>Lessen volgens de normale uren van de zwemschool (indien er afwijkingen zijn, worden deze meegedeeld)</td></tr>\n<tr><td>Juli</td><td>Zomervakantie</td><td>Geen zwemlessen</td></tr>\n<tr><td>Augustus</td><td>Zomervakantie</td><td>Geen zwemlessen</td></tr>\n</tbody></table></div>\n<p>Uitzonderlijke sluitingsdagen van het zwembad melden we in het <a href=\"/#nieuws\">nieuws</a>.</p>"
+  },
+  {
+   "id": "zwemschooltrainers",
+   "path": "/zwemschool/trainers/",
+   "title": "Trainers zwemschool",
+   "menu_title": "Trainers",
+   "sub": "Zij leren je kind zwemmen.",
+   "parent": "/zwemschool/",
+   "order": 35,
+   "in_menu": true,
+   "visible": true,
+   "side": true,
+   "type": "trainers_zwemschool",
+   "target": "",
+   "body": "<p>[[blok]]</p>"
   }
  ]
 }

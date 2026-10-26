@@ -322,38 +322,72 @@ function block_uren(string $afdeling): string {
     return '<nav class="goal-jump" style="margin-top:0">' . $jump . '</nav><div class="timetable" style="margin-top:20px">' . $cards . '</div>';
 }
 
-/** Trainers per groep, met contactgegevens (enkel als de trainer dat toelaat). */
-function block_trainers(?string $afdeling = null): string {
-    $gs = array_values(array_filter(groups(true), fn($g) => ($afdeling === null || $g['afdeling'] === $afdeling) && group_trainers($g)));
-    if (!$gs) return '<p class="empty">Er zijn nog geen trainers gekoppeld aan groepen.</p>';
-    // Opeenvolgende groepen met dezelfde trainers samen tonen ("Kern en Competitie 1 nationaal")
+/** Afdelingen van een trainer ('competitie', 'zwemschool'). */
+function trainer_afdelingen(array $t): array {
+    return array_values(array_intersect(['competitie', 'zwemschool'], (array)($t['afdelingen'] ?? [])));
+}
+
+/** Foto van een trainer, of een rondje met initialen. */
+function trainer_photo(array $t, string $cls = 'avatar'): string {
+    if (!empty($t['foto'])) {
+        $src = str_starts_with($t['foto'], '/uploads/') ? base_path() . ltrim($t['foto'], '/') : $t['foto'];
+        return '<img class="' . $cls . '" src="' . e($src) . '" alt="' . e($t['naam']) . '" loading="lazy">';
+    }
+    $ini = '';
+    foreach (array_slice(preg_split('/\s+/', trim($t['naam'])), 0, 2) as $w) $ini .= mb_strtoupper(mb_substr($w, 0, 1));
+    return '<span class="' . $cls . ' initials" aria-hidden="true">' . e($ini) . '</span>';
+}
+
+/** Competitie: per groep de trainers met foto, telefoon en e-mail. */
+function block_trainers_competitie(): string {
+    $gs = [];
+    foreach (groups(true) as $g) {
+        if ($g['afdeling'] !== 'competitie') continue;
+        $ts = array_values(array_filter(group_trainers($g), fn($t) => in_array('competitie', trainer_afdelingen($t), true)));
+        if ($ts) $gs[] = ['g' => $g, 't' => $ts, 'key' => implode('|', array_column($ts, 'id'))];
+    }
+    if (!$gs) return '<p class="empty">Er zijn nog geen competitietrainers gekoppeld aan groepen.</p>';
+    // Opeenvolgende groepen met dezelfde trainers samen tonen ("Competitie 1 nationaal en Kern")
     $blocks = [];
-    foreach ($gs as $g) {
-        $key = implode('|', $g['trainers']);
+    foreach ($gs as $x) {
         $last = count($blocks) - 1;
-        if ($last >= 0 && $blocks[$last]['key'] === $key) $blocks[$last]['groups'][] = $g;
-        else $blocks[] = ['key' => $key, 'groups' => [$g], 'trainers' => group_trainers($g)];
+        if ($last >= 0 && $blocks[$last]['key'] === $x['key']) $blocks[$last]['groups'][] = $x['g'];
+        else $blocks[] = ['key' => $x['key'], 'groups' => [$x['g']], 'trainers' => $x['t']];
     }
     $html = '';
     foreach ($blocks as $b) {
         $title = nl_list(array_map(fn($g) => $g['naam'], $b['groups']));
-        $html .= '<h2 id="' . e($b['groups'][0]['id']) . '">' . e($title) . '</h2><ul class="contacts">';
+        $html .= '<h2 id="' . e($b['groups'][0]['id']) . '">' . e($title) . '</h2><ul class="contacts with-photo">';
         foreach ($b['trainers'] as $t) {
             $lines = [];
             if (!empty($t['toon_contact'])) {
                 if (!empty($t['telefoon'])) $lines[] = '<a href="' . e(phone_href($t['telefoon'])) . '">' . e($t['telefoon']) . '</a>';
                 if (!empty($t['email'])) $lines[] = '<a href="mailto:' . e($t['email']) . '">' . e($t['email']) . '</a>';
             }
-            $html .= '<li><strong>' . e($t['naam']) . '</strong>' . implode('<br>', $lines) . '</li>';
+            $html .= '<li>' . trainer_photo($t) . '<div><strong>' . e($t['naam']) . '</strong>' . implode('<br>', $lines) . '</div></li>';
         }
         $html .= '</ul>';
     }
     return $html;
 }
 
-/** Inhoudsblokken die in elke pagina gebruikt kunnen worden: [[trainers]], [[trainers:zwemschool]], [[trainers:competitie]]. */
+/** Zwemschool: overzicht van alle trainers met foto en naam. */
+function block_trainers_zwemschool(): string {
+    $ts = array_values(array_filter(trainers(), fn($t) => in_array('zwemschool', trainer_afdelingen($t), true)));
+    if (!$ts) return '<p class="empty">Er zijn nog geen trainers voor de zwemschool.</p>';
+    $html = '<ul class="people">';
+    foreach ($ts as $t) {
+        $gn = [];
+        foreach (groups(true) as $g) if ($g['afdeling'] === 'zwemschool' && in_array($t['id'], $g['trainers'], true)) $gn[] = $g['naam'];
+        $html .= '<li>' . trainer_photo($t, 'photo') . '<strong>' . e($t['naam']) . '</strong>' . ($gn ? '<span>' . e(nl_list($gn)) . '</span>' : '') . '</li>';
+    }
+    return $html . '</ul>';
+}
+
+/** Inhoudsblokken voor elke pagina: [[trainers:competitie]] (of [[trainers]]) en [[trainers:zwemschool]]. */
 function render_shortcodes(string $body): string {
-    return preg_replace_callback('#(?:<p>\s*)?\[\[trainers(?::(zwemschool|competitie))?\]\](?:\s*</p>)?#', fn($m) => block_trainers(!empty($m[1]) ? $m[1] : null), $body);
+    return preg_replace_callback('#(?:<p>\s*)?\[\[trainers(?::(zwemschool|competitie))?\]\](?:\s*</p>)?#',
+        fn($m) => ($m[1] ?? '') === 'zwemschool' ? block_trainers_zwemschool() : block_trainers_competitie(), $body);
 }
 
 function render_body(array $page): string {
@@ -363,7 +397,8 @@ function render_body(array $page): string {
         'kalender' => fn() => block_kalender(),
         'lesuren' => fn() => block_uren('zwemschool'),
         'trainingsuren' => fn() => block_uren('competitie'),
-        'trainers' => fn() => block_trainers(),
+        'trainers' => fn() => block_trainers_competitie(),
+        'trainers_zwemschool' => fn() => block_trainers_zwemschool(),
     ];
     if (isset($map[$type])) {
         $block = $map[$type]();
@@ -467,7 +502,7 @@ function render_preview(array $page): string {
 
 /* ================= Gegevens bijwerken bij een nieuwe versie ================= */
 
-const SCHEMA_VERSION = 2;
+const SCHEMA_VERSION = 3;
 
 function run_migrations(): void {
     $meta = load('meta', ['schema' => 1]);
@@ -476,6 +511,7 @@ function run_migrations(): void {
     if (!$lock || !flock($lock, LOCK_EX | LOCK_NB)) return;
     try {
         if (($meta['schema'] ?? 1) < 2) migrate_to_2();
+        if (($meta['schema'] ?? 1) < 3) migrate_to_3();
         save('meta', ['schema' => SCHEMA_VERSION, 'updated' => date('c')], false);
     } finally {
         flock($lock, LOCK_UN);
@@ -509,4 +545,32 @@ function migrate_to_2(): void {
     }
     unset($p);
     if ($changed) save('pages', $pd);
+}
+
+/** v3: trainers krijgen afdelingen (competitie/zwemschool) en een foto; nieuwe pagina "Trainers zwemschool". */
+function migrate_to_3(): void {
+    $gs = groups();
+    $td = load('trainers', ['trainers' => []]);
+    $changed = false;
+    foreach ($td['trainers'] as &$t) {
+        if (!array_key_exists('foto', $t)) { $t['foto'] = ''; $changed = true; }
+        if (isset($t['afdelingen']) && is_array($t['afdelingen'])) continue;
+        $af = [];
+        foreach ($gs as $g) if (in_array($t['id'], $g['trainers'], true)) $af[] = $g['afdeling'];
+        $t['afdelingen'] = array_values(array_intersect(['competitie', 'zwemschool'], array_unique($af ?: ['competitie'])));
+        $changed = true;
+    }
+    unset($t);
+    if ($changed) save('trainers', $td);
+
+    $pd = load('pages', ['pages' => []]);
+    $has = false;
+    foreach ($pd['pages'] as $p) if (($p['type'] ?? '') === 'trainers_zwemschool') $has = true;
+    if (!$has && page_by_path('/zwemschool/')) {
+        $path = page_by_path('/zwemschool/trainers/') ? '/zwemschool/onze-trainers/' : '/zwemschool/trainers/';
+        $pd['pages'][] = ['id' => new_id(), 'path' => $path, 'title' => 'Trainers zwemschool', 'menu_title' => 'Trainers',
+            'sub' => 'Zij leren je kind zwemmen.', 'parent' => '/zwemschool/', 'order' => 35, 'in_menu' => true, 'visible' => true,
+            'side' => true, 'type' => 'trainers_zwemschool', 'target' => '', 'body' => '<p>[[blok]]</p>'];
+        save('pages', $pd);
+    }
 }

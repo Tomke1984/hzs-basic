@@ -95,6 +95,12 @@
   var ed = document.querySelector('[data-hide-for-link]');
   if (tl && ed) { var syncL = function () { ed.hidden = tl.value === 'link'; }; tl.addEventListener('change', syncL); syncL(); }
 
+
+  // Trainer: telefoon/e-mail enkel tonen als "Competitie" aangevinkt is
+  var compBox = document.querySelector('input[name="afdelingen[]"][value=competitie]');
+  var compFields = document.querySelector('[data-show-afdeling=competitie]');
+  if (compBox && compFields) { var syncC = function () { compFields.hidden = !compBox.checked; }; compBox.addEventListener('change', syncC); syncC(); }
+
   // ---------- Teksteditor ----------
   var BASE = (UPLOAD || '').replace(/(index\.php\?p=.*|beheer\/upload\/)$/, '');
   var LEGACY = body.getAttribute('data-legacy') || '';

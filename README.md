@@ -5,7 +5,7 @@ De inhoud komt van de vorige site (khzs.be), de vormgeving volgt de HZS-clubapp.
 
 - **PHP 8.1+**, geen database: alle inhoud staat in JSON-bestanden in `data/`.
 - **Beheer** (`/beheer`): pagina's, nieuws, kalender (activiteiten, vakanties, sluitingsdagen),
-  groepen en les-/trainingsuren, trainers (gekoppeld aan groepen), instellingen van de startpagina en voettekst, beheerders en bestanden.
+  groepen en les-/trainingsuren, trainers (competitie/zwemschool, foto, gekoppeld aan groepen), instellingen van de startpagina en voettekst, beheerders en bestanden.
 - **Agenda-abonnementen** per groep op `/kalender/ics/<groep>.ics`, live uit de gegevens.
 
 ## Branches
@@ -33,8 +33,8 @@ Te gebruiken in de tekst van elke pagina (op een eigen regel):
 
 | Blok | Toont |
 |---|---|
-| `[[trainers]]` | alle trainers per groep, met contactgegevens |
-| `[[trainers:zwemschool]]` / `[[trainers:competitie]]` | enkel die afdeling |
+| `[[trainers:competitie]]` of `[[trainers]]` | competitietrainers per groep, met foto, telefoon en e-mail |
+| `[[trainers:zwemschool]]` | overzicht van alle zwemschooltrainers met foto en naam |
 
 ## Nieuwe versie met andere gegevensstructuur
 

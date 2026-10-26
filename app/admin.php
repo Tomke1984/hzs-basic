@@ -5,7 +5,7 @@ declare(strict_types=1);
    Beheer van de HZS-website (/beheer)
    ===================================================================== */
 
-const SYSTEM_TYPES = ['home' => 'Startpagina', 'kalender' => 'Kalender', 'lesuren' => 'Lesuren (uit groepen)', 'trainingsuren' => 'Trainingsuren (uit groepen)', 'trainers' => 'Trainers (uit trainers)'];
+const SYSTEM_TYPES = ['home' => 'Startpagina', 'kalender' => 'Kalender', 'lesuren' => 'Lesuren (uit groepen)', 'trainingsuren' => 'Trainingsuren (uit groepen)', 'trainers' => 'Trainers competitie (uit trainers)', 'trainers_zwemschool' => 'Trainers zwemschool (uit trainers)'];
 const RESERVED_PATHS = ['/beheer/', '/assets/', '/uploads/', '/app/', '/data/'];
 
 /* ---------- Sessie, login, CSRF ---------- */
@@ -349,9 +349,10 @@ function admin_page_edit(): void {
     $hint = match ($page['type']) {
         'kalender' => 'De activiteiten, vakanties en agenda-links komen op de plek van <code>[[blok]]</code>. Haal je die weg, dan komen ze onderaan.',
         'lesuren', 'trainingsuren' => 'De uren komen uit <a href="' . e(url('/beheer/groepen/')) . '">Groepen &amp; uren</a> en verschijnen op de plek van <code>[[blok]]</code>.',
-        'trainers' => 'De trainers per groep, met hun contactgegevens, komen uit <a href="' . e(url('/beheer/trainers/')) . '">Trainers</a> en verschijnen op de plek van <code>[[blok]]</code>.',
+        'trainers' => 'De competitietrainers per groep, met foto, telefoon en e-mail, komen uit <a href="' . e(url('/beheer/trainers/')) . '">Trainers</a> en verschijnen op de plek van <code>[[blok]]</code>.',
+        'trainers_zwemschool' => 'Het overzicht van de zwemschooltrainers (foto en naam) komt uit <a href="' . e(url('/beheer/trainers/')) . '">Trainers</a> en verschijnt op de plek van <code>[[blok]]</code>.',
         'home' => 'Dit is het onderste deel van de startpagina. De bovenkant (titel, tekst en knoppen) pas je aan bij <a href="' . e(url('/beheer/instellingen/')) . '">Instellingen</a>; nieuws en activiteiten komen er vanzelf op.',
-        default => 'Tip: typ <code>[[trainers]]</code> op een eigen regel om de trainers per groep te tonen (of <code>[[trainers:zwemschool]]</code> / <code>[[trainers:competitie]]</code>).',
+        default => 'Tip: typ <code>[[trainers:competitie]]</code> op een eigen regel voor de competitietrainers met contactgegevens, of <code>[[trainers:zwemschool]]</code> voor het overzicht van de zwemschooltrainers.',
     };
 
     $f = ($errors ? '<div class="alert alert-error"><ul>' . implode('', array_map(fn($x) => '<li>' . e($x) . '</li>', array_unique($errors))) . '</ul></div>' : '')
@@ -947,14 +948,20 @@ function admin_trainers(): void {
     $rows = '';
     foreach (trainers() as $t) {
         $gn = nl_list(array_map(fn($g) => $g['naam'], trainer_groups($t['id'])));
-        $rows .= '<tr><td><a href="' . e(url('/beheer/trainers/bewerk/?id=' . $t['id'])) . '"><b>' . e($t['naam']) . '</b></a>' . (empty($t['toon_contact']) ? ' <span class="tag">contact verborgen</span>' : '')
+        $af = array_map(fn($a) => '<span class="tag' . ($a === 'competitie' ? ' sys' : '') . '">' . e(AFDELINGEN[$a]) . '</span>', trainer_afdelingen($t));
+        $rows .= '<tr><td class="ph">' . trainer_photo($t, 'thumb round') . '</td><td><a href="' . e(url('/beheer/trainers/bewerk/?id=' . $t['id'])) . '"><b>' . e($t['naam']) . '</b></a><br>' . implode(' ', $af)
+            . (in_array('competitie', trainer_afdelingen($t), true) && empty($t['toon_contact']) ? ' <span class="tag off">contact verborgen</span>' : '')
             . '</td><td class="num">' . e($t['telefoon'] ?: '—') . '</td><td>' . e($t['email'] ?: '—') . '</td><td class="muted">' . e($gn ?: 'geen groep') . '</td></tr>';
     }
-    $page = page_by_path('/competitie/trainers/');
+    $link = function (string $type, string $fallback) {
+        foreach (pages() as $p) if (($p['type'] ?? '') === $type) return '<a href="' . e(url($p['path'])) . '" target="_blank" rel="noopener">' . e($p['title']) . '</a>';
+        return $fallback;
+    };
     $c = '<p class="toolbar"><a class="btn" href="' . e(url('/beheer/trainers/bewerk/')) . '">Trainer toevoegen</a></p>'
-        . '<p class="muted small">Trainers koppel je aan groepen (hier of bij <a href="' . e(url('/beheer/groepen/')) . '">Groepen &amp; uren</a>). Hun namen verschijnen bij de uren, en met contactgegevens op '
-        . ($page ? '<a href="' . e(url($page['path'])) . '" target="_blank" rel="noopener">' . e($page['title']) . '</a>' : 'de trainerspagina') . ' en overal waar <code>[[trainers]]</code> in een pagina staat.</p>'
-        . ($rows ? '<div class="table-wrap"><table class="list"><thead><tr><th>Naam</th><th>Telefoon</th><th>E-mail</th><th>Groepen</th></tr></thead><tbody>' . $rows . '</tbody></table></div>' : '<p class="empty">Nog geen trainers.</p>');
+        . '<p class="muted small"><b>Competitie</b>: per groep met foto, telefoon en e-mail op ' . $link('trainers', 'de trainerspagina') . '. '
+        . '<b>Zwemschool</b>: met foto en naam in het overzicht op ' . $link('trainers_zwemschool', 'de zwemschoolpagina') . '. '
+        . 'Koppel trainers aan groepen hier of bij <a href="' . e(url('/beheer/groepen/')) . '">Groepen &amp; uren</a>; hun namen verschijnen ook bij de uren.</p>'
+        . ($rows ? '<div class="table-wrap"><table class="list"><thead><tr><th></th><th>Naam</th><th>Telefoon</th><th>E-mail</th><th>Groepen</th></tr></thead><tbody>' . $rows . '</tbody></table></div>' : '<p class="empty">Nog geen trainers.</p>');
     admin_page('Trainers', $c, 'trainers');
 }
 
@@ -965,7 +972,7 @@ function admin_trainer_edit(): void {
     foreach ($data['trainers'] as $x) if ($x['id'] === $id) $t = $x;
     if ($id !== '' && !$t) { flash('Trainer niet gevonden.', 'error'); redirect('/beheer/trainers/'); }
     $isNew = !$t;
-    $t = $t ?? ['id' => '', 'naam' => '', 'telefoon' => '', 'email' => '', 'toon_contact' => true];
+    $t = $t ?? ['id' => '', 'naam' => '', 'telefoon' => '', 'email' => '', 'toon_contact' => true, 'afdelingen' => [], 'foto' => ''];
     $sel = $isNew ? [] : array_column(trainer_groups($t['id']), 'id');
     $errors = [];
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -973,8 +980,12 @@ function admin_trainer_edit(): void {
         $t['telefoon'] = mb_substr(post('telefoon'), 0, 30);
         $t['email'] = strtolower(post('email'));
         $t['toon_contact'] = (bool)post('toon_contact', '');
+        $t['afdelingen'] = array_values(array_intersect(['competitie', 'zwemschool'], (array)($_POST['afdelingen'] ?? [])));
+        $foto = post('foto');
+        $t['foto'] = ($foto === '' || preg_match('#^/uploads/[A-Za-z0-9/_.-]+\.(jpe?g|png|gif|webp)$#i', $foto)) ? $foto : ($t['foto'] ?? '');
         $sel = array_values(array_filter((array)($_POST['groepen'] ?? []), 'is_string'));
         if ($t['naam'] === '') $errors[] = 'Vul de naam van de trainer in.';
+        if (!$t['afdelingen']) $errors[] = 'Kies of de trainer bij de competitie, de zwemschool of beide hoort.';
         if ($t['email'] !== '' && !filter_var($t['email'], FILTER_VALIDATE_EMAIL)) $errors[] = 'Het e-mailadres is niet geldig.';
         if ($t['telefoon'] !== '' && !preg_match('/^[0-9 +().\/-]{6,30}$/', $t['telefoon'])) $errors[] = 'Het telefoonnummer mag enkel cijfers, spaties en + . / - ( ) bevatten.';
         foreach ($data['trainers'] as $x) if ($x['id'] !== $t['id'] && mb_strtolower($x['naam']) === mb_strtolower($t['naam'])) $errors[] = 'Er bestaat al een trainer met deze naam.';
@@ -1006,9 +1017,16 @@ function admin_trainer_edit(): void {
     $f = ($errors ? '<div class="alert alert-error"><ul>' . implode('', array_map(fn($x) => '<li>' . e($x) . '</li>', array_unique($errors))) . '</ul></div>' : '')
         . '<input type="hidden" name="id" value="' . e($t['id']) . '">'
         . field('Naam', input('naam', $t['naam'], 'text', 'required maxlength="80" placeholder="Voornaam Achternaam"'))
-        . '<div class="grid2">' . field('Telefoon', input('telefoon', $t['telefoon'], 'tel', 'maxlength="30" placeholder="0470 12 34 56"'))
+        . '<div class="field"><span>Trainer bij</span><div class="checks" style="margin:0">'
+        . checkbox('afdelingen[]', in_array('competitie', $t['afdelingen'] ?? [], true), 'Competitie', 'competitie')
+        . checkbox('afdelingen[]', in_array('zwemschool', $t['afdelingen'] ?? [], true), 'Zwemschool', 'zwemschool')
+        . '</div><small>Competitie: per groep op de website met telefoon en e-mail. Zwemschool: met foto en naam in het overzicht van de zwemschooltrainers.</small></div>'
+        . '<div class="field image-field"><span>Foto</span><div class="image-pick">' . input('foto', $t['foto'] ?? '', 'text', 'placeholder="Geen foto" readonly')
+        . '<button type="button" class="btn ghost small" data-upload-to="foto" data-accept="image/*">Foto kiezen</button><button type="button" class="btn ghost small" data-clear="foto">Weghalen</button></div>'
+        . (!empty($t['foto']) ? trainer_photo($t, 'thumb') : '') . '<small>Liefst een vierkante foto (portret); ze wordt automatisch bijgesneden.</small></div>'
+        . '<div data-show-afdeling="competitie"><div class="grid2">' . field('Telefoon', input('telefoon', $t['telefoon'], 'tel', 'maxlength="30" placeholder="0470 12 34 56"'))
         . field('E-mailadres', input('email', $t['email'], 'email', 'maxlength="120"')) . '</div>'
-        . '<div class="checks">' . checkbox('toon_contact', !empty($t['toon_contact']), 'Telefoon en e-mail tonen op de website') . '</div>'
+        . '<div class="checks">' . checkbox('toon_contact', !empty($t['toon_contact']), 'Telefoon en e-mail tonen op de website') . '</div></div>'
         . '<div class="field"><span>Groepen</span>' . group_checks('groepen', $sel, 'De trainer verschijnt bij de uren en op de trainerspagina van deze groepen.') . '</div>'
         . '<div class="form-actions"><button class="btn">Opslaan</button><a class="btn ghost" href="' . e(url('/beheer/trainers/')) . '">Terug</a></div>';
     $c = post_form('/beheer/trainers/bewerk/' . ($t['id'] ? '?id=' . $t['id'] : ''), $f, 'form');

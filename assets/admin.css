@@ -129,3 +129,6 @@ table.trainings td { padding: 6px; } table.trainings input, table.trainings sele
   .rte-bar { top: 0; }
   .form input, .form select, .form textarea { font-size: 16px; }
 }
+.thumb.round, td.ph .thumb { width: 44px; height: 44px; max-width: none; border-radius: 50%; object-fit: cover; margin: 0; }
+td.ph { width: 56px; }
+span.thumb.initials { display: inline-flex; align-items: center; justify-content: center; background: var(--tile); color: var(--blue); font: 800 1.1rem/1 var(--display); font-style: italic; }

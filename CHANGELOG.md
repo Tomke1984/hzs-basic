@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.4.0] – 2026-10-26 – `dev`
+
+### Toegevoegd
+- Per trainer: **afdeling** (competitie, zwemschool of beide) en een **foto** (uploaden in het beheer).
+- Nieuwe pagina **Trainers zwemschool** (`/zwemschool/trainers/`): overzicht van alle zwemschooltrainers met
+  foto en naam (en hun groepen), zonder contactgegevens.
+- Trainer zonder foto krijgt een rondje met initialen.
+
+### Gewijzigd
+- **Trainers & contact** toont enkel competitiegroepen en competitietrainers, nu met foto, telefoon en e-mail.
+- Inhoudsblokken: `[[trainers:competitie]]` (ook `[[trainers]]`) = contactlijst per groep;
+  `[[trainers:zwemschool]]` = fotoverzicht.
+- Gegevens worden automatisch bijgewerkt (versie 3): bestaande trainers krijgen hun afdeling op basis van hun
+  groepen, en de pagina Trainers zwemschool wordt toegevoegd.
+
 ## [0.3.0] – 2026-10-26 – `dev`
 
 ### Toegevoegd
